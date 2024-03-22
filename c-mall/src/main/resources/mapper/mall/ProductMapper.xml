@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tob.mapper.ProductMapper">
+
+    <select id="queryMaxCollectedProductByStoreId" resultType="com.ruoyi.tob.entity.Product">
+
+        SELECT t.id, t.product_category_id, t.product_name, t.pic, t.price, t.sale
+        from (SELECT a.product_id, count(a.id) as collected_count, b.*
+              from ums_product_collection a
+                       LEFT JOIN pms_product b on a.product_id = b.id
+              where b.store_id = #{storeId}
+                and b.publish_status = 1
+                and b.approve_status = 'approved'
+              GROUP BY a.product_id) t
+        ORDER BY t.collected_count desc limit 3
+
+    </select>
+
+    <select id="queryProductCategoryIdByStoreId" resultType="java.lang.Long">
+        select DISTINCT(product_category_id)
+        FROM `pms_product`
+        where store_id = #{storeId}
+          and publish_status = 1
+          and approve_status = 'approved'
+    </select>
+
+</mapper>

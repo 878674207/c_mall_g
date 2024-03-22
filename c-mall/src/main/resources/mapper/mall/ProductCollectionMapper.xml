@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toc.mapper.ProductCollectionMapper">
+
+    <insert id="batchSaveProductCollection">
+        insert into ums_product_collection (customer_id, product_id, product_name, sub_title, pic,
+                                            collected, price, create_time, update_time, store_id, product_category_id)
+        values
+        <foreach collection="productCollectionList" item="productCollection" separator=",">
+            (#{productCollection.customerId},
+            #{productCollection.productId},
+            #{productCollection.productName},
+            #{productCollection.subTitle},
+            #{productCollection.pic},
+            #{productCollection.collected},
+            #{productCollection.price},
+            #{productCollection.createTime},
+            #{productCollection.updateTime},
+            #{productCollection.storeId},
+            #{productCollection.productCategoryId}
+            )
+        </foreach>
+        ON DUPLICATE KEY
+        UPDATE collected=VALUES (collected),update_time = now()
+    </insert>
+
+</mapper>

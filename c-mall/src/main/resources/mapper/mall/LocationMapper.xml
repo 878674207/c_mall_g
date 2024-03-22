@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.common.mapper.LocationMapper">
+
+    <resultMap type="com.ruoyi.common.entity.LocationInfo" id="LocationInfoResult">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="queryAllProvince" resultMap="LocationInfoResult">
+        select id, code_p as code, name
+        from cus_province
+    </select>
+
+    <select id="queryCityByProvinceCode" parameterType="String" resultMap="LocationInfoResult">
+        select id, code_c as code, name
+        from cus_city where code_p = #{code}
+    </select>
+
+    <select id="queryAreaByCityCode" parameterType="String" resultMap="LocationInfoResult">
+        select id, code_a as code, name
+        from cus_area where code_c = #{code}
+    </select>
+
+    <select id="queryProvinceByName" parameterType="String" resultMap="LocationInfoResult">
+        select id, code_p as code, name
+        from cus_province where name = #{province}
+        limit 1
+    </select>
+
+    <select id="queryCityByNameAndCodeP"  resultMap="LocationInfoResult">
+        select id, code_c as code, name
+        from cus_city where name = #{city} and code_p = #{provinceCode}
+        limit 1
+    </select>
+
+    <select id="queryRegionByNameAndCodeC"  resultMap="LocationInfoResult">
+        select id, code_a as code, name
+        from cus_area where name = #{region} and code_c = #{cityCode}
+            limit 1
+    </select>
+
+</mapper>

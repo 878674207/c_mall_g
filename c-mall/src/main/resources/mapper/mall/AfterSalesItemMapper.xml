@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toc.mapper.AfterSalesItemMapper">
+
+
+
+
+    <select id="queryDistinctAfterSalesIds" resultType="java.lang.Long">
+        SELECT DISTINCT  after_sales_id
+        FROM oms_after_sales_item
+        <where>
+            <if test="afterSalesQo.productName != null and afterSalesQo.productName != ''">
+                and product_name LIKE concat('%', #{afterSalesQo.productName}, '%')
+            </if>
+            <if test="afterSalesQo.afterSalesMethods != null and afterSalesQo.afterSalesMethods != ''">
+                and after_sales_methods = #{afterSalesQo.afterSalesMethods}
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>

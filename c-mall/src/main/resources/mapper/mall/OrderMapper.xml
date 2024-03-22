@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toc.mapper.OrderMapper">
+
+    <resultMap type="com.ruoyi.tob.vo.OrderVo" id="OrderVoMap">
+        <result property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="createTime" column="create_time"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="storeId" column="store_id"/>
+        <result property="storeName" column="store_name"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="afterSalesStatus" column="after_sales_status"/>
+        <association property="buyerInfoVo" javaType="com.ruoyi.tob.vo.BuyerInfoVo">
+            <result property="paymentAccount" column="customer_id"/>
+            <result property="receiverName" column="receiver_name"/>
+            <result property="receiverPhone" column="receiver_phone"/>
+        </association>
+    </resultMap>
+
+
+    <select id="queryStoreRepeatCustomerCount" resultType="java.lang.Long" parameterType="java.lang.Long">
+        SELECT count(*)
+        from (SELECT customer_id, count(1) as order_count
+              FROM oms_order
+              where store_id = #{storeId}
+              GROUP BY customer_id) t
+        where t.order_count > 1
+    </select>
+
+
+    <select id="queyOrderList" resultMap="OrderVoMap">
+        select a.id, a.order_no, a.create_time, a.order_status, a.store_id, a.store_name, a.customer_id,
+        a.total_amount, b.receiver_name, b.receiver_phone, c.after_sales_status
+        from oms_order a
+        left join oms_order_address b on a.id = b.order_id
+        left join oms_after_sales c on a.order_no = c.order_no
+        <where>
+            <if test="orderQo.orderNo != null and orderQo.orderNo != ''">
+                AND a.order_no like concat('%', #{orderQo.orderNo}, '%')
+            </if>
+            <if test="orderQo.receiverInfo != null and orderQo.receiverInfo != ''">
+                AND (
+                    b.receiver_name like concat('%', #{orderQo.receiverInfo}, '%')
+                    or
+                    b.receiver_phone like concat('%', #{orderQo.receiverInfo}, '%')
+                     )
+            </if>
+            <if test="orderQo.startTime!=null">
+                and date_format(a.create_time,'%y%m%d') <![CDATA[>=]]> date_format(#{orderQo.startTime},'%y%m%d')
+            </if>
+            <if test="orderQo.endTime!=null">
+                and date_format(a.create_time,'%y%m%d')  <![CDATA[<=]]> date_format(#{orderQo.endTime},'%y%m%d')
+            </if>
+            <if test="orderQo.storeId!=null">
+                AND a.store_id = #{orderQo.storeId}
+            </if>
+            <if test="orderQo.orderStatus!=null">
+                AND a.order_status = #{orderQo.orderStatus}
+            </if>
+            <if test="orderQo.orderIdList != null and orderQo.orderIdList.size()>0 ">
+                AND a.id in
+                <foreach item="item"  index="index"  open="(" separator=","  close=")" collection="orderQo.orderIdList">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+</mapper>

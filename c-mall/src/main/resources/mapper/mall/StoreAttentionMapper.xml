@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toc.mapper.StoreAttentionMapper">
+
+    <insert id="saveStoreAttention">
+        insert into ums_store_attention (customer_id, store_id, store_name, store_logo, attend, create_time, update_time)
+        values (#{storeAttention.customerId},
+                #{storeAttention.storeId},
+                #{storeAttention.storeName},
+                #{storeAttention.storeLogo},
+                #{storeAttention.attend},
+                #{storeAttention.createTime},
+                #{storeAttention.updateTime}
+               )
+            ON DUPLICATE KEY
+        UPDATE attend=VALUES (attend)
+    </insert>
+
+</mapper>
