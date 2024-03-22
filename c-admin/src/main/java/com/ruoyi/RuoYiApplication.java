@@ -57,9 +57,9 @@ public class RuoYiApplication {
             }
             String pid = ManagementFactory.getRuntimeMXBean().getSystemProperties().get("PID");
 
-            log.info("(♥◠‿◠)ﾉﾞ  ucfx启动成功   ლ(´ڡ`ლ)ﾞ" +
+            log.info("(♥◠‿◠)ﾉﾞ  cmall启动成功   ლ(´ڡ`ლ)ﾞ" +
                     "\n----------------------------------------------------------\n\t" +
-                    "Eyanglao入口程序启动成功  Access URLs:\n\t" +
+                    "cmall入口程序启动成功  Access URLs:\n\t" +
                     "Local: \t\thttp://localhost:" + port + path + "\n\t" +
                     "External: \thttp://" + ip + ":" + port + path + "\n\t" +
                     "运行时进程PID: \t"+pid+"\n"+

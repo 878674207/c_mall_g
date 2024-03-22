@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -55,12 +54,6 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
             tokenService.delWechatLoginUser(wechatLoginUser.getUuid());
         }
 
-        // 小程序销售用户
-        SalesLoginUser salesLoginUser = tokenService.getSalesLoginUser(request);
-        if (Objects.nonNull(salesLoginUser)) {
-            // 删除用户缓存记录
-            tokenService.delSalesLoginUser(salesLoginUser.getToken());
-        }
 
         ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success("退出成功")));
     }

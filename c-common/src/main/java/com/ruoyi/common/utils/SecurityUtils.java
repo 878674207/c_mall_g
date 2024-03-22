@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import com.ruoyi.common.exception.base.BaseException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -120,10 +119,6 @@ public class SecurityUtils {
         if (Objects.nonNull(wechatLoginUser)) {
             return wechatLoginUser;
         }
-        SalesLoginUser salesLoginUser = getCurSalesUserUserV2();
-        if (Objects.nonNull(salesLoginUser)) {
-            return salesLoginUser;
-        }
         return null;
     }
 
@@ -163,50 +158,10 @@ public class SecurityUtils {
 
 
 
-    /**
-     * 获取当前销售用户
-     **/
-    public static SalesLoginUser getCurSalesUserUser() {
-        try {
-            return (SalesLoginUser)getAuthentication().getPrincipal();
-        } catch (Exception e) {
-            throw new ServiceException("获取销售用户信息异常", HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * 获取当前销售用户（捕获异常）
-     **/
-    public static SalesLoginUser getCurSalesUserUserV2() {
-        try {
-            return (SalesLoginUser)getAuthentication().getPrincipal();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 获取当前销售用户id
-     **/
-    public static Long getCurSalesUserUserId() {
-        SalesLoginUser salesUserUser = getCurSalesUserUser();
-        if (Objects.nonNull(salesUserUser)) {
-            return salesUserUser.getId();
-        }
-        return null;
-    }
 
 
-    /**
-     * 获取当前销售用户角色
-     **/
-    public static String getCurSalesUserUserRole() {
-        SalesLoginUser salesUserUser = getCurSalesUserUser();
-        if (Objects.nonNull(salesUserUser)) {
-            return salesUserUser.getCurRoleCode();
-        }
-        return null;
-    }
+
+
 
 
 

@@ -1,16 +1,12 @@
 package com.ruoyi.framework.config;
 
 import com.ruoyi.common.annotation.RequestUser;
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import com.ruoyi.common.enums.CustomResultErrorEnum;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.framework.web.service.TokenService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,7 +15,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
 
 /**
  * @author zxg

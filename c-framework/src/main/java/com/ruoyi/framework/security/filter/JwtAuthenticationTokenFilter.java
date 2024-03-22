@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,7 @@ import com.ruoyi.framework.web.service.TokenService;
 
 /**
  * token过滤器 验证token有效性
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -51,17 +50,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
         if (StringUtils.isNotNull(wechatLoginUser) && StringUtils.isNull(SecurityUtils.getAuthentication())) {
             tokenService.verifyWechatToken(wechatLoginUser);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(wechatLoginUser, null, wechatLoginUser.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            chain.doFilter(request, response);
-            return;
-        }
-
-        // 小程序销售用户
-        SalesLoginUser salesLoginUser = tokenService.getSalesLoginUser(request);
-        if (StringUtils.isNotNull(salesLoginUser) && StringUtils.isNull(SecurityUtils.getAuthentication())) {
-            tokenService.verifySalesUserToken(salesLoginUser);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(salesLoginUser, null, salesLoginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             chain.doFilter(request, response);

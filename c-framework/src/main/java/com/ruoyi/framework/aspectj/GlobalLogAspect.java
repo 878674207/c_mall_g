@@ -1,19 +1,11 @@
 package com.ruoyi.framework.aspectj;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.json.JSONUtil;
-import com.ruoyi.common.core.domain.GlobalLogInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ip.IpUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -104,9 +96,6 @@ public class GlobalLogAspect {
             return  "cus user " + ((WechatLoginUser) user).getId().toString();
         }
 
-        if (user instanceof SalesLoginUser) {
-            return  "sale user " + ((SalesLoginUser) user).getId().toString();
-        }
 
         return Strings.EMPTY;
     }

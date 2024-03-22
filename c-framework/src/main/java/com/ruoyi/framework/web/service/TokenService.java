@@ -1,14 +1,12 @@
 package com.ruoyi.framework.web.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.ruoyi.common.constant.RedisConstants;
-import com.ruoyi.common.core.domain.model.SalesLoginUser;
 import com.ruoyi.common.core.domain.model.WechatLoginUser;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,27 +117,6 @@ public class TokenService
     }
 
 
-    /**
-     * 获取微信小程序销售用户身份信息
-     *
-     * @return 微信小程序登录用户身份信息
-     */
-    public SalesLoginUser getSalesLoginUser(HttpServletRequest request) {
-        // 获取请求携带的令牌
-        String token = getToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            try {
-                Claims claims = parseToken(token);
-                // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.WECHAT_SALES_LOGIN_USER_KEY);
-                String userKey = CacheConstants.WECHAT_SALES_USER_LOGIN_KEY + uuid;
-                return redisCache.getCacheObject(userKey);
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
-
     private String getWechatTokenKey(String uuid) {
         return RedisConstants.WECHAT_LOGIN_USER_KEY + uuid;
     }
@@ -160,16 +137,6 @@ public class TokenService
         }
     }
 
-
-    public void verifySalesUserToken(SalesLoginUser salesLoginUser)
-    {
-        long expireTime = salesLoginUser.getExpireTime();
-        long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
-        {
-            refreshSalesUserToken(salesLoginUser);
-        }
-    }
 
 
     /**
@@ -243,17 +210,6 @@ public class TokenService
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
-    /**
-     * 刷新令牌有效期  小程序销售用户
-     *
-     * @param salesLoginUser 登录信息
-     */
-    public void refreshSalesUserToken(SalesLoginUser salesLoginUser) {
-        salesLoginUser.setLoginTime(System.currentTimeMillis());
-        salesLoginUser.setExpireTime(salesLoginUser.getLoginTime() + RedisConstants.LOGIN_USER_TTL * MILLIS_DAY);
-        String userKey = CacheConstants.WECHAT_SALES_USER_LOGIN_KEY + salesLoginUser.getToken();
-        redisCache.setCacheObject(userKey, salesLoginUser, RedisConstants.LOGIN_USER_TTL, TimeUnit.DAYS);
-    }
 
     /**
      * 刷新令牌有效期
@@ -346,17 +302,6 @@ public class TokenService
     private String getTokenKey(String uuid)
     {
         return CacheConstants.LOGIN_TOKEN_KEY + uuid;
-    }
-
-    /**
-     *  删除销售用户信息
-     * @param token
-     */
-    public void delSalesLoginUser(String token) {
-        if (StringUtils.isNotEmpty(token)) {
-            String userKey = CacheConstants.WECHAT_SALES_USER_LOGIN_KEY + token;
-            redisCache.deleteObject(userKey);
-        }
     }
 
     public void delWechatLoginUser(String token) {

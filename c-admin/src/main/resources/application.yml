@@ -18,7 +18,7 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8082
+  port: 8080
   servlet:
     # 应用的访问路径
     context-path: /
@@ -152,14 +152,13 @@ sms:
 
 # Minio配置   目前配置url 账户密码为测试环境的  生产环境需要重新改配置
 minio:
-  url: http://124.222.10.213:9001
+  url: http://127.0.0.1:9001
   # 此处账号密码为minio启动后cmd窗口中的账号密码，需要可自行更改minio配置
   accessKey: ENC(COcVZN+KShmYk4jhfmyWHTXw7XAjl73N)
   secretKey: ENC(COcVZN+KShmYk4jhfmyWHTXw7XAjl73N)
-  # 初始桶为eyanglao  公有桶
-  bucketName: eyanglao
-  # 为解决http无法安全请求文件，替换文件路径uri，结合nginx配置转发
-  getUri: https://yylpt.cjbang.com.cn/minio
+  # 初始桶为cmall  公有桶
+  bucketName: cmall
+  getUri: https://moneygogogo.online/minio
 
 
 
