@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.model.WechatLoginUser;
+import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.exception.base.BaseException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -115,9 +115,9 @@ public class SecurityUtils {
         if (Objects.nonNull(loginUser)) {
             return loginUser;
         }
-        WechatLoginUser wechatLoginUser = getCurWechatLoginUserV2();
-        if (Objects.nonNull(wechatLoginUser)) {
-            return wechatLoginUser;
+        CustomerLoginUser customerLoginUser = getCurWechatLoginUserV2();
+        if (Objects.nonNull(customerLoginUser)) {
+            return customerLoginUser;
         }
         return null;
     }
@@ -136,9 +136,9 @@ public class SecurityUtils {
     /**
      * 获取当前微信用户
      **/
-    public static WechatLoginUser getCurWechatLoginUser() {
+    public static CustomerLoginUser getCurWechatLoginUser() {
         try {
-            return (WechatLoginUser)getAuthentication().getPrincipal();
+            return (CustomerLoginUser)getAuthentication().getPrincipal();
         } catch (Exception e) {
             throw new ServiceException("获取微信用户信息异常", HttpStatus.UNAUTHORIZED);
         }
@@ -148,9 +148,9 @@ public class SecurityUtils {
     /**
      * 获取当前微信用户（捕获异常）
      **/
-    public static WechatLoginUser getCurWechatLoginUserV2() {
+    public static CustomerLoginUser getCurWechatLoginUserV2() {
         try {
-            return (WechatLoginUser)getAuthentication().getPrincipal();
+            return (CustomerLoginUser)getAuthentication().getPrincipal();
         } catch (Exception e) {
             return null;
         }

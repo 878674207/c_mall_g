@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, EvaluateReply> implements EvaluateReplyService {
-    private final WechatMapper1 wechatMapper;
+    private final CustomerMapper wechatMapper;
     private final EvaluateLikeMapper evaluateLikeMapper;
     private final ProductMapper productMapper;
     private final EvaluateMapper evaluateMapper;
@@ -44,7 +44,7 @@ public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, E
         wrapper.eq(evaluateReply.getQuestionId() != null, EvaluateReply::getQuestionId, evaluateReply.getQuestionId());
         Page initPage = page.initPage();
         Page<EvaluateReply> result = page(initPage, wrapper);
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         Map<Long, List<EvaluateLike>> likeMap = evaluateLikeMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateLike::getReplyId));
         //我是否点赞回复
         LambdaQueryWrapper<EvaluateLike> likeWrapper = new LambdaQueryWrapper<>();

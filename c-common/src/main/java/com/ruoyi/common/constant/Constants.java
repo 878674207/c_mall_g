@@ -84,16 +84,12 @@ public class Constants
      */
     public static final String LOGIN_USER_KEY = "login_user_key";
 
-    /**
-     * 微信小程序普通用户令牌前缀
-     */
-    public static final String WECHAT_LOGIN_USER_KEY = "wechat_login_user_key";
 
 
     /**
-     * 微信小程序销售用户令牌前缀
+     * APP用户令牌前缀
      */
-    public static final String WECHAT_SALES_LOGIN_USER_KEY = "wechat_sales_login_user_key";
+    public static final String CUSTOM_LOGIN_USER_KEY = "custom_login_user_key";
 
 
     /**

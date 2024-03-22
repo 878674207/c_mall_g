@@ -1,5 +1,6 @@
 package com.ruoyi.toc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -23,10 +24,10 @@ import java.util.List;
 @Data
 @TableName("wechat_user")
 @Accessors(chain = true)
-public class WechatUser implements Serializable {
+public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "用户ID")
     @Excel(name = "用户ID", sort = 1)
     private Long id;

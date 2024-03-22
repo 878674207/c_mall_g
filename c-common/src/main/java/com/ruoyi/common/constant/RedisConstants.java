@@ -8,7 +8,7 @@ package com.ruoyi.common.constant;
  * Version 1.0
  **/
 public class RedisConstants {
-    public static final String WECHAT_LOGIN_CODE_KEY = "wechat_login_code:";
+    public static final String CUSTOMER_LOGIN_CODE_KEY = "customer_login_code:";
     public static final Long LOGIN_CODE_TTL = 5L;
     public static final String WECHAT_LOGIN_USER_KEY = "wechat_login_token:";
     public static final Long LOGIN_USER_TTL = 7L;

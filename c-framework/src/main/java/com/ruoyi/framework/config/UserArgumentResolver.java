@@ -1,7 +1,7 @@
 package com.ruoyi.framework.config;
 
 import com.ruoyi.common.annotation.RequestUser;
-import com.ruoyi.common.core.domain.model.WechatLoginUser;
+import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.enums.CustomResultErrorEnum;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.framework.web.service.TokenService;
@@ -37,7 +37,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         //是否是注解元素
         boolean isTrueRequestUser = methodParameter.hasParameterAnnotation(RequestUser.class);
         //是否注在指定用户信息对象
-        boolean isAnnotationXwlUser = methodParameter.getParameterType().isAssignableFrom(WechatLoginUser.class);
+        boolean isAnnotationXwlUser = methodParameter.getParameterType().isAssignableFrom(CustomerLoginUser.class);
         return (isTrueRequestUser && isAnnotationXwlUser);
     }
 
@@ -54,14 +54,14 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        WechatLoginUser wechatUser;
+        CustomerLoginUser customerLoginUser;
         try {
-            wechatUser = tokenService.getWechatLoginUser(request);
+            customerLoginUser = tokenService.getCustomerLoginUser(request);
         } catch (Exception e) {
             throw new CustomException(CustomResultErrorEnum.FORBIDDEN);
         }
         //不排除以下情况->抛出无鉴权权限
-        if (ObjectUtils.isEmpty(wechatUser)) throw new CustomException(CustomResultErrorEnum.FORBIDDEN);
-        return wechatUser;
+        if (ObjectUtils.isEmpty(customerLoginUser)) throw new CustomException(CustomResultErrorEnum.FORBIDDEN);
+        return customerLoginUser;
     }
 }

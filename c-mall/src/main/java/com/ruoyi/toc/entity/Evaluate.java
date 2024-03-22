@@ -49,7 +49,7 @@ public class Evaluate implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty("提问人信息")
-    private WechatUser userInfo;
+    private Customer userInfo;
 
     @TableField(exist = false)
     @ApiModelProperty("首条回复")

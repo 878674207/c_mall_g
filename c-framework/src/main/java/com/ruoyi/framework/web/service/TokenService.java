@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.ruoyi.common.constant.RedisConstants;
-import com.ruoyi.common.core.domain.model.WechatLoginUser;
+import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,23 +93,23 @@ public class TokenService
      *
      * @return 微信小程序登录用户身份信息
      */
-    public WechatLoginUser getWechatLoginUser(HttpServletRequest request) {
+    public CustomerLoginUser getCustomerLoginUser(HttpServletRequest request) {
         // 获取请求携带的令牌
         String token = getToken(request);
         if (StringUtils.isNotEmpty(token)) {
             try {
                 Claims claims = parseToken(token);
                 // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.WECHAT_LOGIN_USER_KEY);
+                String uuid = (String) claims.get(Constants.CUSTOM_LOGIN_USER_KEY);
                 String userKey = getWechatTokenKey(uuid);
 
                 Map<String, Object> userMap = redisCache.getCacheMap(userKey);
                 if (MapUtils.isEmpty(userMap)) {
                     return null;
                 }
-                WechatLoginUser wechatLoginUser = BeanUtil.toBean(userMap, WechatLoginUser.class);
-                wechatLoginUser.setUuid(uuid);
-                return wechatLoginUser;
+                CustomerLoginUser customerLoginUser = BeanUtil.toBean(userMap, CustomerLoginUser.class);
+                customerLoginUser.setUuid(uuid);
+                return customerLoginUser;
             } catch (Exception e) {
             }
         }
@@ -124,16 +124,16 @@ public class TokenService
     /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存
      *
-     * @param wechatLoginUser
+     * @param customerLoginUser
      * @return 令牌
      */
-    public void verifyWechatToken(WechatLoginUser wechatLoginUser)
+    public void verifyCustomerToken(CustomerLoginUser customerLoginUser)
     {
-        long expireTime = Long.parseLong(wechatLoginUser.getExpireTime());
+        long expireTime = Long.parseLong(customerLoginUser.getExpireTime());
         long currentTime = System.currentTimeMillis();
         if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
         {
-            refreshWechatToken(wechatLoginUser);
+            refreshCustomerToken(customerLoginUser);
         }
     }
 
@@ -214,16 +214,16 @@ public class TokenService
     /**
      * 刷新令牌有效期
      *
-     * @param wechatLoginUser 登录信息
+     * @param customerLoginUser 登录信息
      */
-    public void refreshWechatToken(WechatLoginUser wechatLoginUser)
+    public void refreshCustomerToken(CustomerLoginUser customerLoginUser)
     {
         long now = System.currentTimeMillis();
-        wechatLoginUser.setLoginTime(String.valueOf(now));
-        wechatLoginUser.setExpireTime(String.valueOf(now + RedisConstants.LOGIN_USER_TTL * MILLIS_DAY));
+        customerLoginUser.setLoginTime(String.valueOf(now));
+        customerLoginUser.setExpireTime(String.valueOf(now + RedisConstants.LOGIN_USER_TTL * MILLIS_DAY));
         // 根据uuid将loginUser缓存
-        String userKey = getWechatTokenKey(wechatLoginUser.getToken());
-        Map<String, Object> userMap = BeanUtil.beanToMap(wechatLoginUser);
+        String userKey = getWechatTokenKey(customerLoginUser.getToken());
+        Map<String, Object> userMap = BeanUtil.beanToMap(customerLoginUser);
         stringRedisTemplate.opsForHash().putAll(userKey, userMap);
         stringRedisTemplate.expire(userKey, RedisConstants.LOGIN_USER_TTL, TimeUnit.DAYS);
     }

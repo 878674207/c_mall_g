@@ -54,7 +54,7 @@ public class EvaluateReply implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty("回复人信息")
-    private WechatUser ReplyUserInfo;
+    private Customer ReplyUserInfo;
 
     @TableField(exist = false)
     @ApiModelProperty("点赞数")

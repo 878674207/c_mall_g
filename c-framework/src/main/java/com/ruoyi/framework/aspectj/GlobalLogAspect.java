@@ -1,7 +1,7 @@
 package com.ruoyi.framework.aspectj;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.domain.model.WechatLoginUser;
+import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.JoinPoint;
@@ -92,8 +92,8 @@ public class GlobalLogAspect {
             return  "pc user " + user.getUsername().toString();
         }
 
-        if (user instanceof WechatLoginUser) {
-            return  "cus user " + ((WechatLoginUser) user).getId().toString();
+        if (user instanceof CustomerLoginUser) {
+            return  "cus user " + ((CustomerLoginUser) user).getId().toString();
         }
 
 

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> implements EvaluateService {
-    private final WechatMapper1 wechatMapper;
+    private final CustomerMapper wechatMapper;
     private final EvaluateCareMapper evaluateCareMapper;
     private final EvaluateReplyMapper evaluateReplyMapper;
     private final OrderMapper orderMapper;
@@ -46,7 +46,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
                 .like(StringUtils.isNotEmpty(evaluate.getQuestionContent()), Evaluate::getQuestionContent, evaluate.getQuestionContent());
         Page initPage = page.initPage();
         Page<Evaluate> result = page(initPage, wrapper);
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
         careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
@@ -125,7 +125,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             questionWrapper.in(Evaluate::getId, questionIds);
             list = list(questionWrapper);
         }
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
         careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
@@ -176,7 +176,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             questionWrapper.in(Evaluate::getId, questionIds);
             list = list(questionWrapper);
         }
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我的回复
         LambdaQueryWrapper<EvaluateReply> replyWrapper = new LambdaQueryWrapper<>();
         replyWrapper.eq(EvaluateReply::getReplyUserId, SecurityUtils.getCurWechatLoginUserId());
@@ -223,7 +223,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         LambdaQueryWrapper<Evaluate> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Evaluate::getUserId, SecurityUtils.getCurWechatLoginUserId());
         List<Evaluate> list = list(wrapper);
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
         careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
@@ -280,12 +280,12 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         replyWrapper.eq(EvaluateReply::getQuestionId, questionId);
         one.setReplyNumber(evaluateReplyMapper.selectCount(replyWrapper));
         //设置匿名
-        WechatUser wechatUser = wechatMapper.selectById(SecurityUtils.getCurWechatLoginUserId());
+        Customer customer = wechatMapper.selectById(SecurityUtils.getCurWechatLoginUserId());
         if (one.getIsAnonymous()==1) {
-            wechatUser.setNickname("匿名用户");
+            customer.setNickname("匿名用户");
         }
         //设置提问人信息
-        one.setUserInfo(wechatUser);
+        one.setUserInfo(customer);
         return one;
     }
 
@@ -304,7 +304,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyList = evaluateReplyMapper.selectList(replyWrapper);
         }
         Map<Long, List<EvaluateLike>> likeMap = evaluateLikeMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateLike::getReplyId));
-        Map<Long, List<WechatUser>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(WechatUser::getId));
+        Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         Map<Long, List<Order>> orderMap = orderMapper.selectList(null).stream().collect(Collectors.groupingBy(Order::getCustomerId));
 
         List<Evaluate> evaluates = new ArrayList<>();

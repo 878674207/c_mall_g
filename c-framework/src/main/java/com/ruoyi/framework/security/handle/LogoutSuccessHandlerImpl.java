@@ -4,9 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.domain.model.WechatLoginUser;
+import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.web.service.TokenService;
@@ -15,10 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -49,9 +46,9 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
         }
 
         // 小程序消费者用户
-        WechatLoginUser wechatLoginUser = tokenService.getWechatLoginUser(request);
-        if (Objects.nonNull(wechatLoginUser)) {
-            tokenService.delWechatLoginUser(wechatLoginUser.getUuid());
+        CustomerLoginUser customerLoginUser = tokenService.getCustomerLoginUser(request);
+        if (Objects.nonNull(customerLoginUser)) {
+            tokenService.delWechatLoginUser(customerLoginUser.getUuid());
         }
 
 
