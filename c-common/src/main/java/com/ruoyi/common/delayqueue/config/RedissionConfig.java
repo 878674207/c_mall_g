@@ -30,7 +30,7 @@ public class RedissionConfig {
         config.useSingleServer()
                 .setAddress(url)
                 // redis没有配置密码时注释掉
-                .setPassword(redisProperties.getPassword())
+//                .setPassword(redisProperties.getPassword())
                 .setDatabase(redisProperties.getDatabase())
                 .setPingConnectionInterval(2000);
         config.setLockWatchdogTimeout(10000L);
