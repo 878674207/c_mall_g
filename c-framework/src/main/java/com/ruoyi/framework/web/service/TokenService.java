@@ -253,14 +253,7 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.CUSTOM_LOGIN_USER_KEY);
                 String userKey = getCustomerTokenKey(uuid);
-
-                Map<String, Object> userMap = redisCache.getCacheMap(userKey);
-                if (MapUtils.isEmpty(userMap)) {
-                    return null;
-                }
-                CustomerLoginUser customerLoginUser = BeanUtil.toBean(userMap, CustomerLoginUser.class);
-                customerLoginUser.setUuid(uuid);
-                return customerLoginUser;
+                return redisCache.getCacheObject(userKey);
             } catch (Exception e) {
             }
         }

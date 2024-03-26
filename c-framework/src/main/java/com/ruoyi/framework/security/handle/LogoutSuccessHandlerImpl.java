@@ -48,7 +48,7 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
         // APP用户
         CustomerLoginUser customerLoginUser = tokenService.getCustomerLoginUser(request);
         if (Objects.nonNull(customerLoginUser)) {
-            tokenService.delCustomerLoginUser(customerLoginUser.getUuid());
+            tokenService.delCustomerLoginUser(customerLoginUser.getToken());
         }
 
 
