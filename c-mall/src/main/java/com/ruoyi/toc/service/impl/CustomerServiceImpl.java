@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.Result;
 import com.ruoyi.common.core.domain.ResultStatusCode;
 import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.RegexUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -22,13 +23,14 @@ import com.ruoyi.toc.service.CustomerService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +80,6 @@ public class CustomerServiceImpl  implements CustomerService {
             return new Result<>(ResultStatusCode.CODE_VERIFY_FAILED, null);
         }
 
-
         // 生成令牌
         String uuid = IdUtils.fastSimpleUUID();
         Map<String, Object> claims = new HashMap<>();
@@ -89,29 +90,24 @@ public class CustomerServiceImpl  implements CustomerService {
         Customer customer = customerMapper.selectOne(new QueryWrapper<Customer>().eq("phone", phoneNumber));
         if (Objects.isNull(customer)) {
             // 新用户创建
-
             Customer newCustomer  = new Customer();
             //使用雪花算法生成唯一id
             newCustomer.setGender(2);
             newCustomer.setPhone(phoneNumber);
-            newCustomer.setNickname("微信用户");
-            newCustomer.setName("微信用户");
-            newCustomer.setCreatedAt(new Date());
-            newCustomer.setUpdatedAt(new Date());
-            newCustomer.setRegisterDate(new Date());
+            String name = RandomStringUtils.random(10, true, true).toLowerCase(Locale.ROOT);
+            newCustomer.setNickname("用户" + name);
+            newCustomer.setName("用户" + name);
+            newCustomer.setCreateTime(DateUtils.getNowDate());
+            newCustomer.setUpdateTime(DateUtils.getNowDate());
+            newCustomer.setRegisterDate(DateUtils.getNowDate());
             newCustomer.setAvatarUrl(Constants.DEFAULT_AVATAR);
             customerMapper.insert(newCustomer);
             customer = newCustomer;
         }
-
         customer.setToken(token);
-
-
         // 往缓存里面塞入用户信息（UserDetails子类），用于接口鉴权
         tokenService.refreshCustomerToken(CustomerLoginUser.builder().id(customer.getId()).phone(phoneNumber)
                 .token(uuid).build());
-
-
         return new Result<>(ResultStatusCode.OK, customer);
     }
 
@@ -122,7 +118,6 @@ public class CustomerServiceImpl  implements CustomerService {
             // 2.如果不符合，返回错误信息
             return new Result<>(ResultStatusCode.PHONE_VERIFY_FAILED, "手机号格式错误！");
         }
-
         //查看缓存中是否存在code
         String cacheCode = redisCache.getCacheObject(RedisConstants.CUSTOMER_LOGIN_CODE_KEY + phone);
         if (StringUtils.isNotEmpty(cacheCode)) {
@@ -141,7 +136,6 @@ public class CustomerServiceImpl  implements CustomerService {
             redisCache.setCacheObject(RedisConstants.SEND_SMS_COUNT + phone, times.toString(), getEndTime(), TimeUnit.MILLISECONDS);
             //保存验证码到Redis
             redisCache.setCacheObject(RedisConstants.CUSTOMER_LOGIN_CODE_KEY + phone, code, RedisConstants.LOGIN_CODE_TTL, TimeUnit.MINUTES);
-
             return new Result<>(code);
         }
     }
