@@ -31,12 +31,10 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/customer")
 @Slf4j
-@Api(value = "微信小程序用户管理", tags = {"微信小程序用户管理"})
+@Api(value = "APP用户管理", tags = {"APP用户管理"})
 public class CustomerController extends BaseController {
     @Resource
     private CustomerService customerService;
-
-
 
 
     @ApiOperation(value = "登录接口", httpMethod = "POST")
