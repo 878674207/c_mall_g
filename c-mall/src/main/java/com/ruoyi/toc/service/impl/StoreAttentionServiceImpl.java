@@ -29,7 +29,7 @@ public class StoreAttentionServiceImpl extends ServiceImpl<StoreAttentionMapper,
 
     @Override
     public void saveMyStoreAttention(StoreAttention storeAttention) {
-        storeAttention.setCustomerId(SecurityUtils.getCurWechatLoginUser().getId());
+        storeAttention.setCustomerId(SecurityUtils.getCustomerLoginUser().getId());
         storeAttention.setUpdateTime(DateUtils.getNowDate());
         storeAttention.setCreateTime(DateUtils.getNowDate());
         storeAttentionMapper.saveStoreAttention(storeAttention);
@@ -40,7 +40,7 @@ public class StoreAttentionServiceImpl extends ServiceImpl<StoreAttentionMapper,
         Page page = baseQo.initPage();
 
         storeAttentionMapper.selectPage(page, new LambdaQueryWrapper<StoreAttention>()
-                .eq(StoreAttention::getCustomerId, SecurityUtils.getCurWechatLoginUser().getId())
+                .eq(StoreAttention::getCustomerId, SecurityUtils.getCustomerLoginUser().getId())
                 .eq(StoreAttention::getAttend, 1)
                 .like(StringUtils.isNotEmpty(baseQo.getKeyword()), StoreAttention::getStoreName, baseQo.getKeyword())
                 .orderByDesc(StoreAttention::getUpdateTime));

@@ -371,13 +371,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     private void buildProductCollection(ProductVo productVo) {
         productVo.setProductCollection(productCollectionMapper.selectOne(new LambdaQueryWrapper<ProductCollection>()
                 .eq(ProductCollection::getProductId, productVo.getId())
-                .eq(ProductCollection::getCustomerId, SecurityUtils.getCurWechatLoginUserId())));
+                .eq(ProductCollection::getCustomerId, SecurityUtils.getCustomerLoginUserId())));
     }
 
     private void buildStoreAttention(ProductVo productVo) {
         productVo.setStoreAttention(storeAttentionMapper.selectOne(new LambdaQueryWrapper<StoreAttention>()
                 .eq(StoreAttention::getStoreId, productVo.getStoreId())
-                .eq(StoreAttention::getCustomerId, SecurityUtils.getCurWechatLoginUserId())));
+                .eq(StoreAttention::getCustomerId, SecurityUtils.getCustomerLoginUserId())));
     }
 
     @Override

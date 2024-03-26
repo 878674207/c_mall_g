@@ -115,7 +115,7 @@ public class SecurityUtils {
         if (Objects.nonNull(loginUser)) {
             return loginUser;
         }
-        CustomerLoginUser customerLoginUser = getCurWechatLoginUserV2();
+        CustomerLoginUser customerLoginUser = getCustomerLoginUserV2();
         if (Objects.nonNull(customerLoginUser)) {
             return customerLoginUser;
         }
@@ -125,18 +125,18 @@ public class SecurityUtils {
     /**
      * 获取当前微信用户
      **/
-    public static Long getCurWechatLoginUserId() {
+    public static Long getCustomerLoginUserId() {
         try {
-            return getCurWechatLoginUser().getId();
+            return getCustomerLoginUser().getId();
         } catch (Exception e) {
             throw new ServiceException("获取微信用户信息异常", HttpStatus.UNAUTHORIZED);
         }
     }
 
     /**
-     * 获取当前微信用户
+     * 获取当前APP用户
      **/
-    public static CustomerLoginUser getCurWechatLoginUser() {
+    public static CustomerLoginUser getCustomerLoginUser() {
         try {
             return (CustomerLoginUser)getAuthentication().getPrincipal();
         } catch (Exception e) {
@@ -148,7 +148,7 @@ public class SecurityUtils {
     /**
      * 获取当前微信用户（捕获异常）
      **/
-    public static CustomerLoginUser getCurWechatLoginUserV2() {
+    public static CustomerLoginUser getCustomerLoginUserV2() {
         try {
             return (CustomerLoginUser)getAuthentication().getPrincipal();
         } catch (Exception e) {

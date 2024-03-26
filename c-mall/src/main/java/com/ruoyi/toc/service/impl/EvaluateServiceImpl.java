@@ -34,7 +34,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
 
     @Override
     public void saveQuestion(Evaluate evaluate) {
-        evaluate.setUserId(SecurityUtils.getCurWechatLoginUserId());
+        evaluate.setUserId(SecurityUtils.getCustomerLoginUserId());
         evaluate.setCreateTime(new Date());
         save(evaluate);
     }
@@ -49,7 +49,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
+        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateCare>> careMap = evaluateCareMapper.selectList(careWrapper).stream().collect(Collectors.groupingBy(EvaluateCare::getQuestionId));
         //首条回复
         Map<Long, List<EvaluateReply>> replyMap = evaluateReplyMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateReply::getQuestionId));
@@ -75,8 +75,8 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyNumber = replyMap.get(record.getId()) == null ? new Long(0) : new Long(replyMap.get(record.getId()).size());
             record.setReplyNumber(replyNumber);
             //当前人是否可以回复
-            if (orderMap.get(SecurityUtils.getCurWechatLoginUserId()) != null) {
-                for (Order order : orderMap.get(SecurityUtils.getCurWechatLoginUserId())) {
+            if (orderMap.get(SecurityUtils.getCustomerLoginUserId()) != null) {
+                for (Order order : orderMap.get(SecurityUtils.getCustomerLoginUserId())) {
                     if (order.getId() == record.getProductId() && "completed".equals(order.getOrderStatus()))
                         record.setCanReply(new Long(0));
                     else record.setCanReply(new Long(1));
@@ -100,7 +100,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
     @Override
     public void careQuestion(Long questionId) {
         EvaluateCare one = new EvaluateCare();
-        one.setCareUserId(SecurityUtils.getCurWechatLoginUserId());
+        one.setCareUserId(SecurityUtils.getCustomerLoginUserId());
         one.setQuestionId(questionId);
         one.setCreateTime(new Date());
         evaluateCareMapper.insert(one);
@@ -109,7 +109,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
     @Override
     public void dontCareQuestion(Long questionId) {
         LambdaQueryWrapper<EvaluateCare> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId())
+        wrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId())
                 .eq(EvaluateCare::getQuestionId, questionId);
         evaluateCareMapper.delete(wrapper);
     }
@@ -117,7 +117,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
     @Override
     public List<Evaluate> myCareQuestion() {
         LambdaQueryWrapper<EvaluateCare> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
+        wrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId());
         List<Long> questionIds = evaluateCareMapper.selectList(wrapper).stream().map(EvaluateCare::getQuestionId).collect(Collectors.toList());
         List<Evaluate> list = new ArrayList<>();
         if (questionIds.size() > 0) {
@@ -128,7 +128,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
+        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateCare>> careMap = evaluateCareMapper.selectList(careWrapper).stream().collect(Collectors.groupingBy(EvaluateCare::getQuestionId));
         //首条回复
         Map<Long, List<EvaluateReply>> replyMap = evaluateReplyMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateReply::getQuestionId));
@@ -154,8 +154,8 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyNumber = replyMap.get(record.getId()) == null ? new Long(0) : new Long(replyMap.get(record.getId()).size());
             record.setReplyNumber(replyNumber);
             //当前人是否可以回复
-            if (orderMap.get(SecurityUtils.getCurWechatLoginUserId()) != null) {
-                for (Order order : orderMap.get(SecurityUtils.getCurWechatLoginUserId())) {
+            if (orderMap.get(SecurityUtils.getCustomerLoginUserId()) != null) {
+                for (Order order : orderMap.get(SecurityUtils.getCustomerLoginUserId())) {
                     if (order.getId() == record.getProductId() && "completed".equals(order.getOrderStatus()))
                         record.setCanReply(new Long(0));
                     else record.setCanReply(new Long(1));
@@ -168,7 +168,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
     @Override
     public List<Evaluate> myReply() {
         LambdaQueryWrapper<EvaluateReply> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(EvaluateReply::getReplyUserId, SecurityUtils.getCurWechatLoginUserId());
+        wrapper.eq(EvaluateReply::getReplyUserId, SecurityUtils.getCustomerLoginUserId());
         List<Long> questionIds = evaluateReplyMapper.selectList(wrapper).stream().map(EvaluateReply::getQuestionId).collect(Collectors.toList());
         List<Evaluate> list = new ArrayList<>();
         if (questionIds.size() > 0) {
@@ -179,11 +179,11 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我的回复
         LambdaQueryWrapper<EvaluateReply> replyWrapper = new LambdaQueryWrapper<>();
-        replyWrapper.eq(EvaluateReply::getReplyUserId, SecurityUtils.getCurWechatLoginUserId());
+        replyWrapper.eq(EvaluateReply::getReplyUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateReply>> replyMap = evaluateReplyMapper.selectList(replyWrapper).stream().collect(Collectors.groupingBy(EvaluateReply::getQuestionId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
+        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateCare>> careMap = evaluateCareMapper.selectList(careWrapper).stream().collect(Collectors.groupingBy(EvaluateCare::getQuestionId));
         //当前人是否可以回复
         Map<Long, List<Order>> orderMap = orderMapper.selectList(null).stream().collect(Collectors.groupingBy(Order::getCustomerId));
@@ -206,8 +206,8 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyNumber = replyMap.get(record.getId()) == null ? new Long(0) : new Long(replyMap.get(record.getId()).size());
             record.setReplyNumber(replyNumber);
             //当前人是否可以回复
-            if (orderMap.get(SecurityUtils.getCurWechatLoginUserId()) != null) {
-                for (Order order : orderMap.get(SecurityUtils.getCurWechatLoginUserId())) {
+            if (orderMap.get(SecurityUtils.getCustomerLoginUserId()) != null) {
+                for (Order order : orderMap.get(SecurityUtils.getCustomerLoginUserId())) {
                     if (order.getId() == record.getProductId() && "completed".equals(order.getOrderStatus()))
                         record.setCanReply(new Long(0));
                     else record.setCanReply(new Long(1));
@@ -221,12 +221,12 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
     @Override
     public List<Evaluate> myQuestion() {
         LambdaQueryWrapper<Evaluate> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Evaluate::getUserId, SecurityUtils.getCurWechatLoginUserId());
+        wrapper.eq(Evaluate::getUserId, SecurityUtils.getCustomerLoginUserId());
         List<Evaluate> list = list(wrapper);
         Map<Long, List<Customer>> userMap = wechatMapper.selectList(null).stream().collect(Collectors.groupingBy(Customer::getId));
         //我是否关注问题
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId());
+        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateCare>> careMap = evaluateCareMapper.selectList(careWrapper).stream().collect(Collectors.groupingBy(EvaluateCare::getQuestionId));
         //首条回复
         Map<Long, List<EvaluateReply>> replyMap = evaluateReplyMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateReply::getQuestionId));
@@ -252,8 +252,8 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyNumber = replyMap.get(record.getId()) == null ? new Long(0) : new Long(replyMap.get(record.getId()).size());
             record.setReplyNumber(replyNumber);
             //当前人是否可以回复
-            if (orderMap.get(SecurityUtils.getCurWechatLoginUserId()) != null) {
-                for (Order order : orderMap.get(SecurityUtils.getCurWechatLoginUserId())) {
+            if (orderMap.get(SecurityUtils.getCustomerLoginUserId()) != null) {
+                for (Order order : orderMap.get(SecurityUtils.getCustomerLoginUserId())) {
                     if (order.getId() == record.getProductId() && "completed".equals(order.getOrderStatus()))
                         record.setCanReply(new Long(0));
                     else record.setCanReply(new Long(1));
@@ -269,7 +269,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         wrapper.eq(Evaluate::getId, questionId);
         Evaluate one = getOne(wrapper);
         LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId())
+        careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId())
                 .eq(EvaluateCare::getQuestionId, questionId);
         Long careCount = evaluateCareMapper.selectCount(careWrapper);
         //设置是否关注问题
@@ -280,7 +280,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
         replyWrapper.eq(EvaluateReply::getQuestionId, questionId);
         one.setReplyNumber(evaluateReplyMapper.selectCount(replyWrapper));
         //设置匿名
-        Customer customer = wechatMapper.selectById(SecurityUtils.getCurWechatLoginUserId());
+        Customer customer = wechatMapper.selectById(SecurityUtils.getCustomerLoginUserId());
         if (one.getIsAnonymous()==1) {
             customer.setNickname("匿名用户");
         }
@@ -294,7 +294,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
 
         //查问题
         LambdaQueryWrapper<EvaluateLike> likeWrapper = new LambdaQueryWrapper<>();
-        likeWrapper.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCurWechatLoginUserId());
+        likeWrapper.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCustomerLoginUserId());
         List<Long> replyIds = evaluateLikeMapper.selectList(likeWrapper).stream().map(EvaluateLike::getReplyId).collect(Collectors.toList());
         List<EvaluateReply> replyList=new ArrayList<>();
         if (replyIds.size() > 0) {
@@ -320,7 +320,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             } else reply.setReplyUserInfo(userMap.get(reply.getReplyUserId()).get(0));
             //设置是否点赞回复
             LambdaQueryWrapper<EvaluateLike> likeWrapper1 = new LambdaQueryWrapper<>();
-            likeWrapper1.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCurWechatLoginUserId());
+            likeWrapper1.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCustomerLoginUserId());
             Map<Long, List<EvaluateLike>> myLikeMap = evaluateLikeMapper.selectList(likeWrapper).stream().collect(Collectors.groupingBy(EvaluateLike::getReplyId));
             //我是否点赞
             if (myLikeMap.get(reply.getId()) != null) reply.setIsLike(new Long(1));
@@ -333,7 +333,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             reply.setProductName(product.getProductName());
 
             LambdaQueryWrapper<EvaluateCare> careWrapper = new LambdaQueryWrapper<>();
-            careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCurWechatLoginUserId())
+            careWrapper.eq(EvaluateCare::getCareUserId, SecurityUtils.getCustomerLoginUserId())
                     .eq(EvaluateCare::getQuestionId, reply.getQuestionId());
             Long careCount = evaluateCareMapper.selectCount(careWrapper);
             //是否匿名
@@ -349,10 +349,10 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
             replyWrapper1.eq(EvaluateReply::getQuestionId, reply.getQuestionId());
             one.setReplyNumber(evaluateReplyMapper.selectCount(replyWrapper1));
             //设置提问人信息
-            one.setUserInfo(wechatMapper.selectById(SecurityUtils.getCurWechatLoginUserId()));
+            one.setUserInfo(wechatMapper.selectById(SecurityUtils.getCustomerLoginUserId()));
             //当前人是否可以回复
-            if (orderMap.get(SecurityUtils.getCurWechatLoginUserId()) != null) {
-                for (Order order : orderMap.get(SecurityUtils.getCurWechatLoginUserId())) {
+            if (orderMap.get(SecurityUtils.getCustomerLoginUserId()) != null) {
+                for (Order order : orderMap.get(SecurityUtils.getCustomerLoginUserId())) {
                     if (order.getId() == one.getProductId() && "completed".equals(order.getOrderStatus()))
                         one.setCanReply(new Long(0));
                     else one.setCanReply(new Long(1));

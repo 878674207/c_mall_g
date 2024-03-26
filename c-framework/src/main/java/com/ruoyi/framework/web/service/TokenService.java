@@ -88,54 +88,8 @@ public class TokenService
         return null;
     }
 
-    /**
-     * 获取微信小程序登录用户身份信息
-     *
-     * @return 微信小程序登录用户身份信息
-     */
-    public CustomerLoginUser getCustomerLoginUser(HttpServletRequest request) {
-        // 获取请求携带的令牌
-        String token = getToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            try {
-                Claims claims = parseToken(token);
-                // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.CUSTOM_LOGIN_USER_KEY);
-                String userKey = getWechatTokenKey(uuid);
-
-                Map<String, Object> userMap = redisCache.getCacheMap(userKey);
-                if (MapUtils.isEmpty(userMap)) {
-                    return null;
-                }
-                CustomerLoginUser customerLoginUser = BeanUtil.toBean(userMap, CustomerLoginUser.class);
-                customerLoginUser.setUuid(uuid);
-                return customerLoginUser;
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
 
 
-    private String getWechatTokenKey(String uuid) {
-        return RedisConstants.WECHAT_LOGIN_USER_KEY + uuid;
-    }
-
-    /**
-     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
-     *
-     * @param customerLoginUser
-     * @return 令牌
-     */
-    public void verifyCustomerToken(CustomerLoginUser customerLoginUser)
-    {
-        long expireTime = Long.parseLong(customerLoginUser.getExpireTime());
-        long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
-        {
-            refreshCustomerToken(customerLoginUser);
-        }
-    }
 
 
 
@@ -195,7 +149,6 @@ public class TokenService
             refreshToken(loginUser);
         }
     }
-
     /**
      * 刷新令牌有效期
      *
@@ -208,24 +161,6 @@ public class TokenService
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
-    }
-
-
-    /**
-     * 刷新令牌有效期
-     *
-     * @param customerLoginUser 登录信息
-     */
-    public void refreshCustomerToken(CustomerLoginUser customerLoginUser)
-    {
-        long now = System.currentTimeMillis();
-        customerLoginUser.setLoginTime(String.valueOf(now));
-        customerLoginUser.setExpireTime(String.valueOf(now + RedisConstants.LOGIN_USER_TTL * MILLIS_DAY));
-        // 根据uuid将loginUser缓存
-        String userKey = getWechatTokenKey(customerLoginUser.getToken());
-        Map<String, Object> userMap = BeanUtil.beanToMap(customerLoginUser);
-        stringRedisTemplate.opsForHash().putAll(userKey, userMap);
-        stringRedisTemplate.expire(userKey, RedisConstants.LOGIN_USER_TTL, TimeUnit.DAYS);
     }
 
     /**
@@ -304,9 +239,70 @@ public class TokenService
         return CacheConstants.LOGIN_TOKEN_KEY + uuid;
     }
 
-    public void delWechatLoginUser(String token) {
+    /**
+     * 获取APP登录用户身份信息
+     *
+     * @return APP登录用户身份信息
+     */
+    public CustomerLoginUser getCustomerLoginUser(HttpServletRequest request) {
+        // 获取请求携带的令牌
+        String token = getToken(request);
         if (StringUtils.isNotEmpty(token)) {
-            String userKey = getWechatTokenKey(token);
+            try {
+                Claims claims = parseToken(token);
+                // 解析对应的权限以及用户信息
+                String uuid = (String) claims.get(Constants.CUSTOM_LOGIN_USER_KEY);
+                String userKey = getCustomerTokenKey(uuid);
+
+                Map<String, Object> userMap = redisCache.getCacheMap(userKey);
+                if (MapUtils.isEmpty(userMap)) {
+                    return null;
+                }
+                CustomerLoginUser customerLoginUser = BeanUtil.toBean(userMap, CustomerLoginUser.class);
+                customerLoginUser.setUuid(uuid);
+                return customerLoginUser;
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+     *
+     * @param customerLoginUser
+     * @return 令牌
+     */
+    public void verifyCustomerToken(CustomerLoginUser customerLoginUser)
+    {
+        long expireTime = customerLoginUser.getExpireTime();
+        long currentTime = System.currentTimeMillis();
+        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
+        {
+            refreshCustomerToken(customerLoginUser);
+        }
+    }
+
+    /**
+     * 刷新令牌有效期
+     *
+     * @param customerLoginUser 登录信息
+     */
+    public void refreshCustomerToken(CustomerLoginUser customerLoginUser)
+    {
+        customerLoginUser.setLoginTime(System.currentTimeMillis());
+        customerLoginUser.setExpireTime(customerLoginUser.getLoginTime() + RedisConstants.LOGIN_USER_TTL * MILLIS_DAY);
+        String userKey = getCustomerTokenKey(customerLoginUser.getToken());
+        redisCache.setCacheObject(userKey, customerLoginUser, RedisConstants.LOGIN_USER_TTL, TimeUnit.DAYS);
+    }
+
+    private String getCustomerTokenKey(String uuid) {
+        return CacheConstants.CUSTOMER_LOGIN_KEY + uuid;
+    }
+
+    public void delCustomerLoginUser(String token) {
+        if (StringUtils.isNotEmpty(token)) {
+            String userKey = getCustomerTokenKey(token);
             redisCache.deleteObject(userKey);
         }
     }

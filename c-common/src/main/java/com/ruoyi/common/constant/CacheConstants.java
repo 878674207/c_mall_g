@@ -2,7 +2,7 @@ package com.ruoyi.common.constant;
 
 /**
  * 缓存的key 常量
- * 
+ *
  * @author ruoyi
  */
 public class CacheConstants
@@ -44,5 +44,5 @@ public class CacheConstants
 
 
 
-    public static final String WECHAT_SALES_USER_LOGIN_KEY = "wechat_sales_user_login_token:";
+    public static final String CUSTOMER_LOGIN_KEY = "customer_login_token:";
 }

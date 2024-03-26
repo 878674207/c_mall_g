@@ -4,6 +4,8 @@ package com.ruoyi.toc.controller;
 import com.ruoyi.common.core.controller.BaseController;
 
 import com.ruoyi.common.core.domain.CommonException;
+import com.ruoyi.common.core.domain.Result;
+import com.ruoyi.common.core.domain.ResultStatusCode;
 import com.ruoyi.toc.qo.CustomerLoginQo;
 import com.ruoyi.toc.service.CustomerService;
 import io.swagger.annotations.Api;
@@ -32,7 +34,7 @@ import javax.annotation.Resource;
 @Api(value = "微信小程序用户管理", tags = {"微信小程序用户管理"})
 public class CustomerController extends BaseController {
     @Resource
-    private CustomerService wechatService;
+    private CustomerService customerService;
 
 
 
@@ -40,17 +42,27 @@ public class CustomerController extends BaseController {
     @ApiOperation(value = "登录接口", httpMethod = "POST")
     @PostMapping("login")
     public Object login(@Validated @RequestBody CustomerLoginQo customerLoginQo) throws CommonException {
-        return wechatService.login(customerLoginQo);
+        return customerService.login(customerLoginQo);
     }
 
 
     @ApiOperation(value = "接收短信验证码接口", httpMethod = "GET")
-    @GetMapping("sendSms")
+    @GetMapping("send-sms")
     public Object sendSms(@RequestParam("phone") String phone) {
-        return wechatService.sendSms(phone);
+        return customerService.sendSms(phone);
     }
 
 
+    @GetMapping("user-info")
+    @ApiOperation(value = "查询当前用户信息", httpMethod = "GET")
+    public Result getUserInfo() {
+        try {
+            return Result.sucessResult(customerService.getUserInfo());
+        } catch (Exception e) {
+            log.error("查询当前用户信息失败", e);
+            return Result.failResult(ResultStatusCode.SYSTEM_ERR.getErrorCode(), e.getMessage());
+        }
+    }
 
 
 }

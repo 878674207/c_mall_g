@@ -106,8 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**")
                 .permitAll()
-                .antMatchers("/custom/wechat/login", "/custom/wechat/login/v2", "/custom/wechat/sendSms", "/custom/pay/open-id", "/custom/pay/notify",
-                        "/sale/user/login", "/sale/user/login/v2")
+                .antMatchers("/customer/login", "/customer/send-sms")
                 .permitAll()
                 .antMatchers("/file/**").permitAll()
 

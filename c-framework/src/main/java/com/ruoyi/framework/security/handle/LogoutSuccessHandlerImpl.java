@@ -45,10 +45,10 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, "退出成功"));
         }
 
-        // 小程序消费者用户
+        // APP用户
         CustomerLoginUser customerLoginUser = tokenService.getCustomerLoginUser(request);
         if (Objects.nonNull(customerLoginUser)) {
-            tokenService.delWechatLoginUser(customerLoginUser.getUuid());
+            tokenService.delCustomerLoginUser(customerLoginUser.getUuid());
         }
 
 

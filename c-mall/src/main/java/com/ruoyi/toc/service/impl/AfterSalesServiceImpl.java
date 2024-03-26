@@ -58,7 +58,7 @@ public class AfterSalesServiceImpl implements AfterSalesService {
 
     @Override
     public void applyAfterSales(AfterSales afterSalesEntity) {
-        afterSalesEntity.setCustomerId(SecurityUtils.getCurWechatLoginUserId());
+        afterSalesEntity.setCustomerId(SecurityUtils.getCustomerLoginUserId());
         afterSalesEntity.setCreateTime(DateUtils.getNowDate());
         afterSalesEntity.setAfterSalesStatus("apply");
         afterSalesEntity.setAfterSalesNo("SH" + afterSalesEntity.getOrderNo());
@@ -73,7 +73,7 @@ public class AfterSalesServiceImpl implements AfterSalesService {
     @Override
     public Page<AfterSales> myAfterSalesList(BaseQo<AfterSales> baseQo) {
         Page<AfterSales> page = afterSalesMapper.selectPage(baseQo.initPage(), new LambdaQueryWrapper<AfterSales>()
-                .eq(AfterSales::getCustomerId, SecurityUtils.getCurWechatLoginUserId()));
+                .eq(AfterSales::getCustomerId, SecurityUtils.getCustomerLoginUserId()));
         if (CollectionUtils.isEmpty(page.getRecords())) {
             return page;
         }

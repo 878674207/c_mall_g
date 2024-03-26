@@ -166,7 +166,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
 
         Page<Order> page = orderMapper.selectPage(orderQueryQo.initPage(), new LambdaQueryWrapper<Order>()
-                .eq(Order::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(Order::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .eq(Order::getDeleteStatus, 0)
                 .eq(StringUtils.isNotEmpty(orderQueryQo.getOrderStatus()) , Order::getOrderStatus, orderQueryQo.getOrderStatus())
                 .in(CollectionUtils.isNotEmpty(orderQueryQo.getOrderIdList()), Order::getId, orderQueryQo.getOrderIdList())
@@ -320,7 +320,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private void checkRepeatedSubmission(List<ConfirmOrder> confirmOrderList) throws CommonException {
         String productSkuIdStr = confirmOrderList.stream().map(ConfirmOrder::getConfirmOrderItems)
                 .flatMap(Collection::stream).map(item -> item.getProductSkuId().toString()).collect(Collectors.joining(","));
-        String redisKey = MALLREPEATEDSUBMISSIONKEY + SecurityUtils.getCurWechatLoginUserId() + productSkuIdStr;
+        String redisKey = MALLREPEATEDSUBMISSIONKEY + SecurityUtils.getCustomerLoginUserId() + productSkuIdStr;
         String isSubmitted = redisCache.getCacheObject(redisKey);
         if (StringUtils.isEmpty(isSubmitted)) {
             redisCache.setCacheObject(redisKey, "isSubmitted", 3, TimeUnit.SECONDS);
@@ -354,7 +354,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         String orderNo = getOrderNo(confirmOrder.getStoreId());
         BigDecimal totalAmount = confirmOrderItems.stream().map(ConfirmOrderItem::getTotalPrice).reduce(BigDecimal::add).get();
         Order order = new Order()
-                .setCustomerId(SecurityUtils.getCurWechatLoginUserId())
+                .setCustomerId(SecurityUtils.getCustomerLoginUserId())
                 .setStoreId(confirmOrder.getStoreId())
                 .setStoreName(confirmOrder.getStoreName())
                 .setRemark(confirmOrder.getRemark())
@@ -409,7 +409,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
 
     private String getOrderNo(Long storeId) {
-        Long userId = SecurityUtils.getCurWechatLoginUserId();
+        Long userId = SecurityUtils.getCustomerLoginUserId();
         String subUserId = userId.toString().substring(userId.toString().length() - 6);
         // 下单时间戳
         String curTimeStr = DateUtils.dateTimeNow();

@@ -41,7 +41,7 @@ public class ProductCollectionServiceImpl extends ServiceImpl<ProductCollectionM
 
     @Override
     public void saveMyProductCollection(ProductCollection productCollection) {
-        productCollection.setCustomerId(SecurityUtils.getCurWechatLoginUser().getId());
+        productCollection.setCustomerId(SecurityUtils.getCustomerLoginUser().getId());
         productCollection.setUpdateTime(DateUtils.getNowDate());
         productCollection.setCreateTime(DateUtils.getNowDate());
         productCollectionMapper.batchSaveProductCollection(Arrays.asList(productCollection));
@@ -51,7 +51,7 @@ public class ProductCollectionServiceImpl extends ServiceImpl<ProductCollectionM
     public Page queryMyProductCollectionList(ProductCollectionQo productCollectionQo) {
         Page page = productCollectionQo.initPage();
         productCollectionMapper.selectPage(page, new LambdaQueryWrapper<ProductCollection>()
-                .eq(ProductCollection::getCustomerId, SecurityUtils.getCurWechatLoginUser().getId())
+                .eq(ProductCollection::getCustomerId, SecurityUtils.getCustomerLoginUser().getId())
                 .eq(ProductCollection::getCollected, 1)
                 .like(StringUtils.isNotEmpty(productCollectionQo.getKeyword()), ProductCollection::getProductName, productCollectionQo.getKeyword())
                 .eq(Objects.nonNull(productCollectionQo.getProductCategoryId()), ProductCollection::getProductCategoryId, productCollectionQo.getProductCategoryId())
@@ -72,7 +72,7 @@ public class ProductCollectionServiceImpl extends ServiceImpl<ProductCollectionM
     @Override
     public List<ProductCategory> queryProductCategory() {
         List<ProductCollection> productCollectionList = productCollectionMapper.selectList(new LambdaQueryWrapper<ProductCollection>()
-                .eq(ProductCollection::getCustomerId, SecurityUtils.getCurWechatLoginUser().getId())
+                .eq(ProductCollection::getCustomerId, SecurityUtils.getCustomerLoginUser().getId())
                 .eq(ProductCollection::getCollected, 1));
         if (CollectionUtils.isEmpty(productCollectionList)) {
             return Lists.newArrayList();

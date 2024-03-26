@@ -46,7 +46,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         if (Objects.isNull(purchaseOrder.getId())) {
             purchaseOrder.setCreateTime(DateUtils.getNowDate());
         }
-        purchaseOrder.setCustomerId(SecurityUtils.getCurWechatLoginUserId());
+        purchaseOrder.setCustomerId(SecurityUtils.getCustomerLoginUserId());
 
         // 保证一个用户只有一个默认采购单
         handDefaultPurchaseOrder(purchaseOrder);
@@ -56,7 +56,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
 
     private void handDefaultPurchaseOrder(PurchaseOrder purchaseOrder) {
         PurchaseOrder defaultPurchaseOrder = getOne(new LambdaQueryWrapper<PurchaseOrder>()
-                .eq(PurchaseOrder::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(PurchaseOrder::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .eq(PurchaseOrder::getDefaultPurchaseOrder, 1).last("limit 1"));
         if (Objects.isNull(defaultPurchaseOrder)
                 || purchaseOrder.getDefaultPurchaseOrder() == 0
@@ -91,7 +91,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
             purchaseOrderQo.setPurchaseOrderIds(purchaseOrderItems.stream().map(PurchaseOrderItem::getPurchaseOrderId).collect(Collectors.toSet()));
         }
         page(page, new LambdaQueryWrapper<PurchaseOrder>()
-                .eq(PurchaseOrder::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(PurchaseOrder::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .in(CollectionUtils.isNotEmpty(purchaseOrderQo.getPurchaseOrderIds()), PurchaseOrder::getId, purchaseOrderQo.getPurchaseOrderIds())
                 .orderByDesc(PurchaseOrder::getCreateTime));
         List<PurchaseOrder> records = page.getRecords();
@@ -106,7 +106,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
 
     @Override
     public List<PurchaseOrder> queryAllPurchaseOrderList() {
-        return list(new LambdaQueryWrapper<PurchaseOrder>().eq(PurchaseOrder::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+        return list(new LambdaQueryWrapper<PurchaseOrder>().eq(PurchaseOrder::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .last("order by default_purchase_order desc, create_time desc"));
     }
 

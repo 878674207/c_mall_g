@@ -48,7 +48,7 @@ public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, E
         Map<Long, List<EvaluateLike>> likeMap = evaluateLikeMapper.selectList(null).stream().collect(Collectors.groupingBy(EvaluateLike::getReplyId));
         //我是否点赞回复
         LambdaQueryWrapper<EvaluateLike> likeWrapper = new LambdaQueryWrapper<>();
-        likeWrapper.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCurWechatLoginUserId());
+        likeWrapper.eq(EvaluateLike::getLikeUserId, SecurityUtils.getCustomerLoginUserId());
         Map<Long, List<EvaluateLike>> myLikeMap = evaluateLikeMapper.selectList(likeWrapper).stream().collect(Collectors.groupingBy(EvaluateLike::getReplyId));
         for (EvaluateReply record : result.getRecords()) {
             //是否匿名
@@ -72,7 +72,7 @@ public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, E
 
     @Override
     public void saveReply(EvaluateReply evaluateReply) {
-        evaluateReply.setReplyUserId(SecurityUtils.getCurWechatLoginUserId());
+        evaluateReply.setReplyUserId(SecurityUtils.getCustomerLoginUserId());
         evaluateReply.setCreateTime(new Date());
         save(evaluateReply);
     }
@@ -89,7 +89,7 @@ public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, E
     @Override
     public void like(Long replyId) {
         EvaluateLike like = new EvaluateLike();
-        like.setLikeUserId(SecurityUtils.getCurWechatLoginUserId());
+        like.setLikeUserId(SecurityUtils.getCustomerLoginUserId());
         like.setReplyId(replyId);
         like.setCreateTime(new Date());
         evaluateLikeMapper.insert(like);
@@ -99,7 +99,7 @@ public class EvaluateReplyServiceImpl extends ServiceImpl<EvaluateReplyMapper, E
     public void dontLike(Long replyId) {
         LambdaQueryWrapper<EvaluateLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EvaluateLike::getReplyId, replyId)
-                .eq(EvaluateLike::getLikeUserId, SecurityUtils.getCurWechatLoginUserId());
+                .eq(EvaluateLike::getLikeUserId, SecurityUtils.getCustomerLoginUserId());
         evaluateLikeMapper.delete(wrapper);
     }
 }

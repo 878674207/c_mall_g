@@ -29,7 +29,7 @@ public class CustomerDeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddr
             deliveryAddress.setCreateTime(DateUtils.getNowDate());
         }
         deliveryAddress.setUpdateTime(DateUtils.getNowDate());
-        deliveryAddress.setCustomerId(SecurityUtils.getCurWechatLoginUserId());
+        deliveryAddress.setCustomerId(SecurityUtils.getCustomerLoginUserId());
         // 保证一个用户只有一个默认地址
         handDefaultAddress(deliveryAddress);
         saveOrUpdate(deliveryAddress);
@@ -52,7 +52,7 @@ public class CustomerDeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddr
     @Override
     public DeliveryAddress queryMyDefaultAddress() {
         DeliveryAddress defaultAddress = getOne(new LambdaQueryWrapper<DeliveryAddress>()
-                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .eq(DeliveryAddress::getDefaultAddress, 1).last("limit 1"));
         if (Objects.nonNull(defaultAddress)) {
             return defaultAddress;
@@ -60,7 +60,7 @@ public class CustomerDeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddr
 
         // 没有设置默认地址取收获地址第一条
         List<DeliveryAddress> list = list(new LambdaQueryWrapper<DeliveryAddress>()
-                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .orderByDesc(DeliveryAddress::getUpdateTime));
         if (CollectionUtils.isNotEmpty(list)) {
             return list.get(0);
@@ -70,7 +70,7 @@ public class CustomerDeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddr
 
     private DeliveryAddress queryDefaultAddress() {
         return getOne(new LambdaQueryWrapper<DeliveryAddress>()
-                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .eq(DeliveryAddress::getDefaultAddress, 1).last("limit 1"));
     }
 
@@ -83,7 +83,7 @@ public class CustomerDeliveryAddressServiceImpl extends ServiceImpl<DeliveryAddr
     @Override
     public Page queryDeliveryAddressList(BaseQo baseQo) {
         return page(baseQo.initPage(), new LambdaQueryWrapper<DeliveryAddress>()
-                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(DeliveryAddress::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .orderByDesc(DeliveryAddress::getDefaultAddress));
     }
 

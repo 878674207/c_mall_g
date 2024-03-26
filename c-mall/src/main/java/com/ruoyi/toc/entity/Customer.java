@@ -22,7 +22,7 @@ import java.util.List;
  * Version 1.0
  **/
 @Data
-@TableName("wechat_user")
+@TableName("ums_customer")
 @Accessors(chain = true)
 public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;

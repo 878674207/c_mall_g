@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.ResultStatusCode;
 import com.ruoyi.common.core.domain.model.CustomerLoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.RegexUtil;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 
@@ -63,7 +64,7 @@ public class CustomerServiceImpl  implements CustomerService {
     @Override
     public Result login(CustomerLoginQo customerLoginQo) throws CommonException {
         String phoneNumber = customerLoginQo.getPhone();
-        if (org.apache.commons.lang3.StringUtils.isEmpty(phoneNumber)) {
+        if (StringUtils.isEmpty(phoneNumber)) {
             throw new CommonException("手机号不存在");
         }
         if (RegexUtil.isPhoneInvalid(phoneNumber)) {
@@ -143,6 +144,11 @@ public class CustomerServiceImpl  implements CustomerService {
 
             return new Result<>(code);
         }
+    }
+
+    @Override
+    public Customer getUserInfo() {
+        return customerMapper.selectById(SecurityUtils.getCustomerLoginUserId());
     }
 
     //获取当前时间到今天结束时间所剩余的毫秒数：

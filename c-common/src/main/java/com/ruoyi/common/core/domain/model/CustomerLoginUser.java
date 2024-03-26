@@ -43,12 +43,12 @@ public class CustomerLoginUser implements UserDetails {
     /**
      * 过期时间
      */
-    private String expireTime;
+    private Long expireTime;
 
     /**
      * 登录时间
      */
-    private String loginTime;
+    private Long loginTime;
 
     private String uuid;
 

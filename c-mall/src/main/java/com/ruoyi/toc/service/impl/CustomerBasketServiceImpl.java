@@ -68,11 +68,11 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
     @Override
     public Page myBasketList(BaseQo baseQo) {
         Page page = basketMapper.selectPage(baseQo.initPage(), new LambdaQueryWrapper<Basket>()
-                .eq(Basket::getCustomerId, SecurityUtils.getCurWechatLoginUserId()));
+                .eq(Basket::getCustomerId, SecurityUtils.getCustomerLoginUserId()));
         if (CollectionUtils.isEmpty(page.getRecords())) {
             return page;
         }
-        
+
         // 遍历购物车，校验每个购物车明细单价是否发生变化
         List<Basket> records = page.getRecords();
         List<Long> basketIds = records.stream().map(Basket::getId).collect(Collectors.toList());
@@ -119,7 +119,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
 
         Basket basket = basketMapper.selectOne(new LambdaQueryWrapper<Basket>()
                 .eq(Basket::getStoreId, basketQo.getStoreId())
-                .eq(Basket::getCustomerId, SecurityUtils.getCurWechatLoginUserId())
+                .eq(Basket::getCustomerId, SecurityUtils.getCustomerLoginUserId())
                 .last("limit 1"));
 
         // 该店铺没有购物车
@@ -164,7 +164,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
      *  清空商品明细为空的购物车
      */
     public void refreshBasket() {
-        List<BasketVo> basketVos = basketMapper.queryBasketList(new BasketQo().setCustomerId(SecurityUtils.getCurWechatLoginUserId()));
+        List<BasketVo> basketVos = basketMapper.queryBasketList(new BasketQo().setCustomerId(SecurityUtils.getCustomerLoginUserId()));
         if (CollectionUtils.isEmpty(basketVos)) {
             return;
         }
@@ -203,7 +203,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
         List<ProductCollection> list = Lists.newArrayList();
         productList.forEach(item -> {
             list.add(new ProductCollection()
-                    .setCustomerId(SecurityUtils.getCurWechatLoginUserId())
+                    .setCustomerId(SecurityUtils.getCustomerLoginUserId())
                     .setProductId(item.getId())
                     .setProductName(item.getProductName())
                     .setSubTitle(item.getSubTitle())
@@ -224,7 +224,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
     @Override
     public void clearBasket() {
         List<Basket> baskets = basketMapper.selectList(new LambdaQueryWrapper<Basket>()
-                .eq(Basket::getCustomerId, SecurityUtils.getCurWechatLoginUserId()));
+                .eq(Basket::getCustomerId, SecurityUtils.getCustomerLoginUserId()));
         if (CollectionUtils.isEmpty(baskets)) {
             return;
         }
@@ -278,7 +278,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
     private Basket addBasket(BasketQo basketQo) {
         Basket basket = new Basket()
                 .setStoreId(basketQo.getStoreId()).setStoreName(basketQo.getStoreName())
-                .setCustomerId(SecurityUtils.getCurWechatLoginUserId())
+                .setCustomerId(SecurityUtils.getCustomerLoginUserId())
                 .setCreateTime(DateUtils.getNowDate())
                 .setUpdateTime(DateUtils.getNowDate());
         basketMapper.insert(basket);
