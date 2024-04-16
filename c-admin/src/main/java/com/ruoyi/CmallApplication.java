@@ -26,7 +26,7 @@ import java.net.UnknownHostException;
 @Slf4j
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 //@EnableFeignClients
-public class RuoYiApplication {
+public class CmallApplication {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
 
@@ -46,7 +46,7 @@ public class RuoYiApplication {
     public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         try {
-            ConfigurableApplicationContext application = SpringApplication.run(RuoYiApplication.class, args);
+            ConfigurableApplicationContext application = SpringApplication.run(CmallApplication.class, args);
 
             Environment env = application.getEnvironment();
             String ip = InetAddress.getLocalHost().getHostAddress();

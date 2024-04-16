@@ -47,6 +47,35 @@ public class FileController {
      * @return
      * @throws Exception
      */
+    @PostMapping("/upload/v2")
+    @ApiOperation(value = "单文件上传", httpMethod = "POST")
+    public Object uploadFileMinioV2(@RequestParam("file") MultipartFile file) throws Exception {
+        try {
+            FileResponse response = new FileResponse();
+            String originalFileName = file.getOriginalFilename();
+            // 上传并返回访问地址
+            String fileName = FileUploadUtils.uploadMinio(file);
+            // 根据斜杠最后一次出现的位置截取子字符串
+            String modifiedFileName = fileName.substring(fileName.lastIndexOf('/') + 1);
+            response.setFileUrl(fileName.replace(originalUri, getFileUri));
+            response.setFileName(modifiedFileName);
+            response.setOriginalFileName(originalFileName);
+            response.setFileSize(file.getSize());
+            return AjaxResult.success(response);
+        } catch (Exception e) {
+            log.error("upload failed,failed reason is {}", e);
+            return new Result<>(ResultStatusCode.SYSTEM_ERR, null);
+        }
+    }
+
+
+    /**
+     * 上传到minio图片服务器(单文件)
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/upload")
     @ApiOperation(value = "单文件上传", httpMethod = "POST")
     public Object uploadFileMinio(@RequestParam("file") MultipartFile file) throws Exception {
@@ -57,7 +86,7 @@ public class FileController {
             String fileName = FileUploadUtils.uploadMinio(file);
             // 根据斜杠最后一次出现的位置截取子字符串
             String modifiedFileName = fileName.substring(fileName.lastIndexOf('/') + 1);
-            response.setFileUrl(fileName.replace(originalUri, getFileUri));
+            response.setFileUrl(fileName);
             response.setFileName(modifiedFileName);
             response.setOriginalFileName(originalFileName);
             response.setFileSize(file.getSize());
