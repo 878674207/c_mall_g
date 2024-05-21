@@ -11,7 +11,7 @@ import java.util.List;
 public interface CustomerBasketService {
     Page myBasketList(BaseQo baseQo);
 
-    void saveBasket(BasketQo basketQo) throws CommonException;
+    void saveBasket(BasketQo basketQo);
 
     void deleteBasket(BasketQo basketQo);
 

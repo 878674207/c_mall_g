@@ -39,7 +39,7 @@ public class CustomerController extends BaseController {
 
     @ApiOperation(value = "登录接口", httpMethod = "POST")
     @PostMapping("login")
-    public Object login(@Validated @RequestBody CustomerLoginQo customerLoginQo) throws CommonException {
+    public Object login(@Validated @RequestBody CustomerLoginQo customerLoginQo) {
         return customerService.login(customerLoginQo);
     }
 

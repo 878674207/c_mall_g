@@ -12,7 +12,7 @@ public interface ProductAttributeCategoryService {
 
     Page<ProductAttributeCategory> queryProductAttributeCategoryPageList(BaseQo baseQo);
 
-    void deleteProductAttributeCategory(Long id) throws CommonException;
+    void deleteProductAttributeCategory(Long id);
 
     List<ProductAttributeCategory> queryProductAttributeCategoryAllList();
 

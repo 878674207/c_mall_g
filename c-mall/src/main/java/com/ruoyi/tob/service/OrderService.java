@@ -10,9 +10,9 @@ import java.util.List;
 public interface OrderService {
     List<OrderVo> queyOrderList(OrderQo orderQo);
 
-    OrderVo queryOrderDetail(Long id) throws CommonException;
+    OrderVo queryOrderDetail(Long id);
 
-    void addOrderRemark(OrderRemarkLog orderRemarkLog) throws CommonException;
+    void addOrderRemark(OrderRemarkLog orderRemarkLog);
 
-    void confirmDelivery(Long id) throws CommonException;
+    void confirmDelivery(Long id);
 }

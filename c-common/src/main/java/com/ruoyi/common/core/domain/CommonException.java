@@ -7,7 +7,7 @@ package com.ruoyi.common.core.domain;
  * Date 2023/9/1 10:14
  * Version 1.0
  **/
-public class CommonException extends Exception {
+public class CommonException extends RuntimeException {
     private int resultCode;
     private String detailMessage;
 

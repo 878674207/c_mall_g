@@ -10,9 +10,9 @@ import java.util.List;
 public interface ProductAttributeService {
     Page queryProductAttributePageList(ProductAttributeQo productAttributeQo);
 
-    void saveProductAttribute(ProductAttribute productAttribute) throws CommonException;
+    void saveProductAttribute(ProductAttribute productAttribute);
 
-    void deleteProductAttribute(Long id) throws CommonException;
+    void deleteProductAttribute(Long id);
 
     List<ProductAttribute> queryProductAttributeAllList(Long attributeCategoryId);
 }

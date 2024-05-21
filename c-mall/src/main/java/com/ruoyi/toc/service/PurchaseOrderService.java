@@ -11,7 +11,7 @@ import java.util.List;
 public interface PurchaseOrderService {
     void savePurchaseOrder(PurchaseOrder purchaseOrder);
 
-    void deletePurchaseOrder(Long id) throws CommonException;
+    void deletePurchaseOrder(Long id);
 
     Page<PurchaseOrder> queryPurchaseOrderList(PurchaseOrderQo purchaseOrderQo);
 
@@ -19,7 +19,7 @@ public interface PurchaseOrderService {
 
     PurchaseOrder queryHomePagePurchaseOrder();
 
-    void addProduct(PurchaseOrderItemQo purchaseOrderItemQo) throws CommonException;
+    void addProduct(PurchaseOrderItemQo purchaseOrderItemQo);
 
     void updateProduct(PurchaseOrderItemQo purchaseOrderItemQo);
 }

@@ -8,7 +8,7 @@ import com.ruoyi.toc.qo.CustomerLoginQo;
 
 public interface CustomerService {
 
-    Result login(CustomerLoginQo customerLoginQo) throws CommonException;
+    Result login(CustomerLoginQo customerLoginQo);
     Object sendSms(String phone);
 
 

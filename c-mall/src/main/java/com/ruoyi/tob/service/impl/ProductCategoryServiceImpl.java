@@ -37,7 +37,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public ProductCategory queryProductCategoryDetail(Long id) throws CommonException {
+    public ProductCategory queryProductCategoryDetail(Long id) {
         ProductCategory productCategory = productCategoryMapper.selectById(id);
         if (Objects.isNull(productCategory)) {
             throw new CommonException("该商品分类不存在");
@@ -46,7 +46,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public void deleteProductCategory(Long id) throws CommonException {
+    public void deleteProductCategory(Long id) {
         ProductCategory productCategory = productCategoryMapper.selectById(id);
         if (Objects.isNull(productCategory)) {
             throw new CommonException("该商品分类不存在");

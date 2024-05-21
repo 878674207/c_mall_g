@@ -53,7 +53,7 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
     }
 
     @Override
-    public void update(List<SkuStock> skuStockList) throws CommonException {
+    public void update(List<SkuStock> skuStockList) {
         if (CollectionUtils.isEmpty(skuStockList)) {
             return;
         }
@@ -86,10 +86,9 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
      * 锁定库存
      *
      * @param skuStockQoList
-     * @throws CommonException
      */
     @Override
-    public void lockSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException {
+    public void lockSkuStock(List<SkuStockQo> skuStockQoList) {
         if (CollectionUtils.isEmpty(skuStockQoList)) {
             return;
         }
@@ -120,7 +119,7 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
 
     }
 
-    private void lockSkuStockHandler(List<SkuStockQo> skuStockQoList) throws CommonException {
+    private void lockSkuStockHandler(List<SkuStockQo> skuStockQoList) {
         Map<Long, SkuStock> stockMap = getStockMap(skuStockQoList);
         if (MapUtils.isEmpty(stockMap)) {
             return;
@@ -150,10 +149,9 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
      * 解锁库存
      *
      * @param skuStockQoList
-     * @throws CommonException
      */
     @Override
-    public void unLockSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException {
+    public void unLockSkuStock(List<SkuStockQo> skuStockQoList) {
         if (CollectionUtils.isEmpty(skuStockQoList)) {
             return;
         }
@@ -184,7 +182,7 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
     }
 
 
-    private void unLockSkuStockHandler(List<SkuStockQo> skuStockQoList) throws CommonException {
+    private void unLockSkuStockHandler(List<SkuStockQo> skuStockQoList) {
 
         Map<Long, SkuStock> stockMap = getStockMap(skuStockQoList);
         if (MapUtils.isEmpty(stockMap)) {
@@ -213,10 +211,9 @@ public class SkuStockServiceImpl extends ServiceImpl<SkuStockMapper, SkuStock> i
      * 扣减库存
      *
      * @param skuStockQoList
-     * @throws CommonException
      */
     @Override
-    public void reduceSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException {
+    public void reduceSkuStock(List<SkuStockQo> skuStockQoList) {
         if (CollectionUtils.isEmpty(skuStockQoList)) {
             return;
         }

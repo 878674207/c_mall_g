@@ -101,7 +101,7 @@ public class AfterSalesServiceImpl implements AfterSalesService {
     }
 
     @Override
-    public AfterSalesVo queryAfterSalesDetail(Long id) throws CommonException {
+    public AfterSalesVo queryAfterSalesDetail(Long id) {
         AfterSales afterSales = afterSalesMapper.selectById(id);
         if (Objects.isNull(afterSales)) {
             throw new CommonException("该笔售后不存在");
@@ -119,7 +119,7 @@ public class AfterSalesServiceImpl implements AfterSalesService {
     }
 
     @Override
-    public void dealAfterSales(AfterSalesQo afterSalesQo) throws CommonException {
+    public void dealAfterSales(AfterSalesQo afterSalesQo) {
         AfterSales afterSales = afterSalesMapper.selectById(afterSalesQo.getId());
         if (Objects.isNull(afterSales)) {
             throw new CommonException("该笔售后不存在");
@@ -131,7 +131,7 @@ public class AfterSalesServiceImpl implements AfterSalesService {
     }
 
     @Override
-    public void addAfterSalesRemark(AfterSalesRemarkLog afterSalesRemarkLog) throws CommonException {
+    public void addAfterSalesRemark(AfterSalesRemarkLog afterSalesRemarkLog) {
         AfterSales afterSales = afterSalesMapper.selectById(afterSalesRemarkLog.getAfterSalesId());
         if (Objects.isNull(afterSales)) {
             throw new CommonException("该笔售后不存在");

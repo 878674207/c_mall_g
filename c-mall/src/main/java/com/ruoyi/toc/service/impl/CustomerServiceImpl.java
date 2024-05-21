@@ -64,7 +64,7 @@ public class CustomerServiceImpl  implements CustomerService {
 
 
     @Override
-    public Result login(CustomerLoginQo customerLoginQo) throws CommonException {
+    public Result login(CustomerLoginQo customerLoginQo) {
         String phoneNumber = customerLoginQo.getPhone();
         if (StringUtils.isEmpty(phoneNumber)) {
             throw new CommonException("手机号不存在");

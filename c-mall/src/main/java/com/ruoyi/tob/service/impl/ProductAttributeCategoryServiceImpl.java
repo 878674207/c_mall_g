@@ -55,7 +55,7 @@ public class ProductAttributeCategoryServiceImpl implements ProductAttributeCate
     }
 
     @Override
-    public void deleteProductAttributeCategory(Long id) throws CommonException {
+    public void deleteProductAttributeCategory(Long id) {
         ProductAttributeCategory productAttributeCategory = productAttributeCategoryMapper.selectById(id);
         if (Objects.isNull(productAttributeCategory)) {
             throw new CommonException("该商品属性分类不存在");

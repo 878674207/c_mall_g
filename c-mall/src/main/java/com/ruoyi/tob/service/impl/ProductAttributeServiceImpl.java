@@ -45,7 +45,7 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     }
 
     @Override
-    public void saveProductAttribute(ProductAttribute productAttribute) throws CommonException {
+    public void saveProductAttribute(ProductAttribute productAttribute) {
         ProductAttributeCategory attributeCategory = productAttributeCategoryMapper.selectById(productAttribute.getProductAttributeCategoryId());
         if (Objects.isNull(attributeCategory)) {
             throw new CommonException("该属性分类不存在");
@@ -82,10 +82,9 @@ public class ProductAttributeServiceImpl implements ProductAttributeService {
     /**
      * 删除改属性，并修改属性分类属性个数
      * @param id 属性id
-     * @throws CommonException 业务异常
      */
     @Override
-    public void deleteProductAttribute(Long id) throws CommonException {
+    public void deleteProductAttribute(Long id) {
         ProductAttribute productAttribute = productAttributeMapper.selectById(id);
         if (Objects.isNull(productAttribute)) {
             throw new CommonException("该属性不存在");

@@ -15,13 +15,13 @@ public interface SkuStockService {
     /**
      * 批量更新商品库存信息
      */
-    void update( List<SkuStock> skuStockList) throws CommonException;
+    void update( List<SkuStock> skuStockList);
 
     void del(String[] ids);
 
-    void lockSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException;
+    void lockSkuStock(List<SkuStockQo> skuStockQoList);
 
-    void unLockSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException;
+    void unLockSkuStock(List<SkuStockQo> skuStockQoList);
 
-    void reduceSkuStock(List<SkuStockQo> skuStockQoList) throws CommonException;
+    void reduceSkuStock(List<SkuStockQo> skuStockQoList);
 }

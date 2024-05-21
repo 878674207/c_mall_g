@@ -11,9 +11,9 @@ import java.util.List;
 public interface ProductCategoryService {
     Page queryProductCategoryPageList(BaseQo baseQo);
 
-    ProductCategory queryProductCategoryDetail(Long id) throws CommonException;
+    ProductCategory queryProductCategoryDetail(Long id);
 
-    void deleteProductCategory(Long id) throws CommonException;
+    void deleteProductCategory(Long id);
 
     void saveProductCategory(ProductCategory productCategory);
 

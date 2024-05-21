@@ -10,23 +10,23 @@ import com.ruoyi.toc.qo.OrderQueryQo;
 import com.ruoyi.toc.vo.ConfirmOrderVo;
 
 public interface CustomerOrderService {
-    void submitOrder(OrderQo orderQo) throws CommonException;
+    void submitOrder(OrderQo orderQo);
 
-    void cancelOrder(Long id) throws CommonException;
+    void cancelOrder(Long id);
 
-    void unLockSkuStock(Order order) throws CommonException;
+    void unLockSkuStock(Order order);
 
     Page<Order> myOrderList(OrderQueryQo orderQueryQo);
 
-    void completeOrder(String orderNo) throws CommonException;
+    void completeOrder(String orderNo);
 
-    void deleteOrder(Long id) throws CommonException;
+    void deleteOrder(Long id);
 
     void updateAddress(OrderAddress orderAddress);
 
-    Object queryOrderDetail(Long id) throws CommonException;
+    Object queryOrderDetail(Long id);
 
-    ConfirmOrderVo purchaseAgain(Long id) throws CommonException;
+    ConfirmOrderVo purchaseAgain(Long id);
 
-    void confirmReceive(Long id) throws CommonException;
+    void confirmReceive(Long id);
 }

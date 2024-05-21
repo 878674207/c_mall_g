@@ -16,15 +16,15 @@ public interface ProductService {
 
     String generateSn();
 
-    ProductVo queryProductDetail(Long id) throws CommonException;
+    ProductVo queryProductDetail(Long id);
 
-    void batchOperate(ProductQo productQo) throws CommonException;
+    void batchOperate(ProductQo productQo);
 
-    void productApprove(ApproveRequest approveRequest) throws CommonException;
+    void productApprove(ApproveRequest approveRequest);
 
     Page queryClientProductList(ClientProductQo clientProductQo);
 
-    ProductVo queryClientProductDetail(Long id) throws CommonException;
+    ProductVo queryClientProductDetail(Long id);
 
-    ConfirmOrderVo productSettle(SettleQo settleQo) throws CommonException;
+    ConfirmOrderVo productSettle(SettleQo settleQo);
 }

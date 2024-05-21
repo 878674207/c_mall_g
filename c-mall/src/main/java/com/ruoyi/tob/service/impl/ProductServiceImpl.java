@@ -142,7 +142,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     }
 
     @Override
-    public ProductVo queryProductDetail(Long id) throws CommonException {
+    public ProductVo queryProductDetail(Long id) {
         Product product = getById(id);
         if (Objects.isNull(product)) {
             throw new CommonException("该商品不存在");
@@ -165,7 +165,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     }
 
     @Override
-    public void batchOperate(ProductQo productQo) throws CommonException {
+    public void batchOperate(ProductQo productQo) {
 
         List<Long> productIdlist = productQo.getIdlist();
 
@@ -199,7 +199,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
      *  如果该商品下的sku存在锁定库存，即未结束的订单，此商品不允许下架或者删除
      * @param productIdlist
      */
-    private void checkProductLockStock(List<Long> productIdlist) throws CommonException {
+    private void checkProductLockStock(List<Long> productIdlist) {
         List<SkuStock> stockList = skuStockService.list(new QueryWrapper<SkuStock>().in("product_id", productIdlist));
         Set<Long> productIds = stockList.stream().filter(item -> item.getLockStock() > 0).map(SkuStock::getProductId).collect(Collectors.toSet());
         if (CollectionUtils.isEmpty(productIds)) {
@@ -216,7 +216,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     }
 
     @Override
-    public void productApprove(ApproveRequest approveRequest) throws CommonException {
+    public void productApprove(ApproveRequest approveRequest) {
         if (!RoleConstants.MALL_MANAGER.equals(SecurityUtils.getLoginRoleCode())) {
             throw new CommonException("该角色无权限审核");
         }
@@ -265,7 +265,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     }
 
     @Override
-    public ProductVo queryClientProductDetail(Long id) throws CommonException {
+    public ProductVo queryClientProductDetail(Long id) {
         ProductVo productVo = queryProductDetail(id);
 
         // 店铺信息
@@ -381,7 +381,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product>  imp
     }
 
     @Override
-    public ConfirmOrderVo productSettle(SettleQo settleQo) throws CommonException {
+    public ConfirmOrderVo productSettle(SettleQo settleQo) {
         ConfirmOrderVo confirmOrderVo = new ConfirmOrderVo();
 
         if (Objects.isNull(settleQo.getDeliveryAddressId())) {

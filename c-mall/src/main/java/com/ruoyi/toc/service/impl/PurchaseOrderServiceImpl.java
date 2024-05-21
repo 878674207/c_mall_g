@@ -70,7 +70,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
-    public void deletePurchaseOrder(Long id) throws CommonException {
+    public void deletePurchaseOrder(Long id) {
         PurchaseOrder purchaseOrder = getById(id);
         if (Objects.isNull(purchaseOrder)) {
             throw new CommonException("该采购单不存在!");
@@ -140,7 +140,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
-    public void addProduct(PurchaseOrderItemQo purchaseOrderItemQo) throws CommonException {
+    public void addProduct(PurchaseOrderItemQo purchaseOrderItemQo) {
         PurchaseOrderItem purchaseOrderItem = purchaseOrderItemMapper.selectOne(new LambdaQueryWrapper<PurchaseOrderItem>()
                 .eq(PurchaseOrderItem::getPurchaseOrderId, purchaseOrderItemQo.getPurchaseOrderId())
                 .eq(PurchaseOrderItem::getProductSkuId, purchaseOrderItemQo.getProductSkuId())

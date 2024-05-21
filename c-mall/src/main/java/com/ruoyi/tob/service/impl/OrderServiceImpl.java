@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderVo queryOrderDetail(Long id) throws CommonException {
+    public OrderVo queryOrderDetail(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在!");
@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrderRemark(OrderRemarkLog orderRemarkLog) throws CommonException {
+    public void addOrderRemark(OrderRemarkLog orderRemarkLog) {
         Order order = orderMapper.selectById(orderRemarkLog.getOrderId());
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在!");
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void confirmDelivery(Long id) throws CommonException {
+    public void confirmDelivery(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在!");

@@ -32,7 +32,7 @@ public class SkuStockController {
     @ApiOperation("批量更新sku库存信息")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult update(@RequestBody List<SkuStock> skuStockList) throws CommonException {
+    public AjaxResult update(@RequestBody List<SkuStock> skuStockList) {
         skuStockService.update(skuStockList);
         return AjaxResult.success();
     }

@@ -115,7 +115,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
     }
 
     @Override
-    public void saveBasket(BasketQo basketQo) throws CommonException {
+    public void saveBasket(BasketQo basketQo) {
 
         Basket basket = basketMapper.selectOne(new LambdaQueryWrapper<Basket>()
                 .eq(Basket::getStoreId, basketQo.getStoreId())
@@ -285,7 +285,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
         return basket;
     }
 
-    private void addBasketItem(BasketQo basketQo) throws CommonException {
+    private void addBasketItem(BasketQo basketQo) {
         Product product = productMapper.selectById(basketQo.getProductId());
         SkuStock skuStock = skuStockService.getById(basketQo.getProductSkuId());
         if (Objects.isNull(product) || Objects.isNull(skuStock)) {
@@ -313,7 +313,7 @@ public class CustomerBasketServiceImpl implements CustomerBasketService {
         basketItemService.save(basketItem);
     }
 
-    private void updateBasketItem(BasketItem basketItem, BasketQo basketQo) throws CommonException {
+    private void updateBasketItem(BasketItem basketItem, BasketQo basketQo) {
         SkuStock skuStock = skuStockService.getById(basketQo.getProductSkuId());
         if (Objects.isNull(skuStock)) {
             throw new CommonException("商品不存在");

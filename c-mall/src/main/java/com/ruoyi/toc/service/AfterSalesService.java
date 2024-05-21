@@ -17,9 +17,9 @@ public interface AfterSalesService {
 
     List<AfterSalesVo> queryAfterSalesList(AfterSalesQo afterSalesQo);
 
-    AfterSalesVo queryAfterSalesDetail(Long id) throws CommonException;
+    AfterSalesVo queryAfterSalesDetail(Long id);
 
-    void dealAfterSales(AfterSalesQo afterSalesQo) throws CommonException;
+    void dealAfterSales(AfterSalesQo afterSalesQo);
 
-    void addAfterSalesRemark(AfterSalesRemarkLog afterSalesRemarkLog) throws CommonException;
+    void addAfterSalesRemark(AfterSalesRemarkLog afterSalesRemarkLog);
 }

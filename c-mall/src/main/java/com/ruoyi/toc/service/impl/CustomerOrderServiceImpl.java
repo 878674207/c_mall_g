@@ -95,7 +95,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private OrderItemMapper orderItemMapper;
 
     @Override
-    public void submitOrder(OrderQo orderQo) throws CommonException {
+    public void submitOrder(OrderQo orderQo) {
         List<ConfirmOrder> confirmOrderList = orderQo.getConfirmOrderList();
         if (CollectionUtils.isEmpty(confirmOrderList)) {
             throw new CommonException("商品为空，无法提交订单");
@@ -117,7 +117,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void cancelOrder(Long id) throws CommonException {
+    public void cancelOrder(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在");
@@ -138,7 +138,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         orderMapper.updateById(new Order().setId(order.getId()).setOrderStatus(Constants.MALL_ORDER_STATUS_5));
     }
 
-    public void unLockSkuStock(Order order) throws CommonException {
+    public void unLockSkuStock(Order order) {
         if (Objects.isNull(order)) {
             return;
         }
@@ -190,7 +190,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void completeOrder(String orderNo) throws CommonException {
+    public void completeOrder(String orderNo) {
         Order order = orderMapper.selectOne(new LambdaQueryWrapper<Order>().eq(Order::getOrderNo, orderNo).last("limit 1"));
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在");
@@ -215,7 +215,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void deleteOrder(Long id) throws CommonException {
+    public void deleteOrder(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在");
@@ -230,7 +230,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public Object queryOrderDetail(Long id) throws CommonException {
+    public Object queryOrderDetail(Long id) {
 
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
@@ -243,7 +243,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public ConfirmOrderVo purchaseAgain(Long id) throws CommonException {
+    public ConfirmOrderVo purchaseAgain(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在!");
@@ -288,7 +288,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void confirmReceive(Long id) throws CommonException {
+    public void confirmReceive(Long id) {
         Order order = orderMapper.selectById(id);
         if (Objects.isNull(order)) {
             throw new CommonException("订单不存在!");
@@ -315,9 +315,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     /**
      *  防止重复提交
      * @param confirmOrderList
-     * @throws CommonException
      */
-    private void checkRepeatedSubmission(List<ConfirmOrder> confirmOrderList) throws CommonException {
+    private void checkRepeatedSubmission(List<ConfirmOrder> confirmOrderList) {
         String productSkuIdStr = confirmOrderList.stream().map(ConfirmOrder::getConfirmOrderItems)
                 .flatMap(Collection::stream).map(item -> item.getProductSkuId().toString()).collect(Collectors.joining(","));
         String redisKey = MALLREPEATEDSUBMISSIONKEY + SecurityUtils.getCustomerLoginUserId() + productSkuIdStr;
@@ -419,7 +418,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 + String.format("%04d", storeId) + subUserId + curTimeStr;
     }
 
-    private void lockSkuStock(List<ConfirmOrder> confirmOrderList) throws CommonException {
+    private void lockSkuStock(List<ConfirmOrder> confirmOrderList) {
         List<SkuStockQo> skuStockQoList = Lists.newArrayList();
         for (ConfirmOrder confirmOrder : confirmOrderList) {
             if (CollectionUtils.isEmpty(confirmOrder.getConfirmOrderItems())) {
