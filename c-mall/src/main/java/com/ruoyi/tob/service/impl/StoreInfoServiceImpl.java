@@ -87,9 +87,9 @@ public class StoreInfoServiceImpl extends ServiceImpl<StoreMapper, StoreInfo> im
         if (StringUtils.isNotEmpty(storeInfo.getStoreAccount())) {
             if (checkDuplicate(storeInfo.getStoreAccount()) > 0) throw new ServiceException("该账号已被注册,请重新填写");
         } else {
-            String numb = ranNumb(6);
+            String numb = "store_" + ranNumb(6);
             for (int i = 0; checkDuplicate(numb)>0; i++) {
-                numb=ranNumb(6);
+                numb="store_" + ranNumb(6);
             }
             storeInfo.setStoreAccount(numb);
         }

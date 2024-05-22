@@ -109,13 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/customer/login", "/customer/send-sms")
                 .permitAll()
                 .antMatchers("/file/**").permitAll()
-
-                // 二维码分享
-                .antMatchers("/sale/user/qr-code/*").permitAll()
-                // 微信用户可以无认证访问首页相关页面
-                .antMatchers("/system/dict/data/type/*", "/custom/institution/list", "/custom/institution/detail/query/**",
-                        "/custom/institution/info/detail/query/*", "/custom/evaluation/*/page-list", "/custom/institution/business-license/query/*",
-                        "/custom/info/page-list", "/custom/info/add-read/*", "/custom/notice/page-list").permitAll()
+                .antMatchers("/system/dict/data/type/*").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated().and().headers().frameOptions().disable();
         // 添加Logout filter

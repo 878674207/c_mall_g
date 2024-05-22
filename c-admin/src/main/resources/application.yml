@@ -152,13 +152,13 @@ sms:
 
 # Minio配置   目前配置url 账户密码为测试环境的  生产环境需要重新改配置
 minio:
-  url: http://127.0.0.1:9000
+  url: http://114.132.198.42:9000
   # 此处账号密码为minio启动后cmd窗口中的账号密码，需要可自行更改minio配置
   accessKey: admin
   secretKey: admin123456
   # 初始桶为cmall  公有桶
   bucketName: cmall
-  getUri: https://moneygogogo.online/minio
+  getUri: http://moneygogogo.online/minio
 
 
 
