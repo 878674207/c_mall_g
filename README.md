@@ -85,6 +85,3 @@ cmall商城是基于[若依](http://doc.ruoyi.vip/ruoyi/) 和，毫无保留给�
     </tr>
 </table>
 
-
-## 若依前后端分离交流群
-
